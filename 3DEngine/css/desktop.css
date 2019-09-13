@@ -1,0 +1,445 @@
+
+.rectangle
+{
+	background-color:rgba(20,20,150,0.2);
+    position: absolute;
+}
+
+button.defaultButton
+{
+	//Border, TextColor/Size
+	border-style: groove;
+	border-width: 3px;
+	border-color: white;
+	font-size: 2em;
+	font-weight: bold;
+	text-align: center;
+	color: rgba(220, 220, 220, 1.0);
+	text-shadow: -3px 2px black;
+}
+
+#loading
+{
+	height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  width: 100%;
+  height: 100%;
+
+	//background: linear-gradient(-90deg, #00FFFF, white);
+	background: linear-gradient(-45deg, #000, white);
+}
+
+div.loader 
+{
+	width: 20vw;
+  height: 20vw;
+
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #000; /* Blue */
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin 
+{
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); } 
+}
+
+div.sidebarPage
+{
+	position: absolute;
+	left: 0%;
+	top: 12%;
+	right: 0%;
+	bottom: 10%;
+
+	background: transparent !important;
+}
+
+input.finput
+{
+	position: relative;
+	top: -5px;
+	width: 100%;
+	border-radius: 4px;
+
+	text-align: left;
+	font-size: 1.0vw;
+	font-family: "Consolas", Arial, sans-serif;
+
+	color: black;
+	background-color: #F0F0F0;
+
+	resize: none;
+	overflow: auto;
+
+	padding-left: 8px;
+	padding-top: 0.05vw;
+	padding-bottom: 0.05vw;
+}
+#finputtext
+{
+	position: relative;
+	top: -5px;
+	width: 100%;
+	border-radius: 4px;
+
+	text-align: left;
+	font-size: 1.0vw;
+	font-family: "Consolas", Arial, sans-serif;
+
+	color: black;
+	background-color: #F0F0F0;
+
+	resize: none;
+	overflow: auto;
+
+	padding-left: 8px;
+	padding-top: 0.05vw;
+	padding-bottom: 0.05vw;
+}
+
+h1.heading
+{
+	color: white;
+	font-size: 1.2vw;
+}
+
+p.detail
+{
+	color: white;
+	font-size: 1.0vw;
+	padding-left: 1.1vw;
+	padding-right: 1.1vw;
+	text-shadow: -1px 1px black;
+}
+
+h1.fheading
+{
+	color: white;
+	text-align: left;
+	font-size: 1.2vw;
+	text-decoration: underline;
+}
+
+#formContainer
+{
+	position: absolute;
+	left: 20%;
+	top: 16%;
+	right: 20%;
+	bottom: 0%;
+
+	text-align: center;
+}
+
+div.sidebarPage > p
+{
+	font-family: "Consolas", Arial, sans-serif;
+	font-size: 1.0vw;
+	//font-weight: bold;
+	text-align: center;
+	color: white;
+	//text-shadow: -1px 1px rgb(150, 150, 150);
+}
+
+p 
+{
+	-webkit-margin-before: 0 !important;
+}
+
+#SwitchPage
+{
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+
+	cursor: pointer;
+
+	display: table;
+
+	position: absolute; 
+	top: 5.5%; 
+	left: 37.5%; 
+	right: 37.5%; 
+	bottom: 90.0%; 
+
+	width: 25.0%; 
+	height: 3.5%; 
+
+  line-height: 3.5%;
+
+	font-size: 0.95vw;
+	font-weight: bold;
+	color: #000;
+	text-align: center;
+
+	border-style: solid; 
+	border-width: 1px; 
+	border-color: white; 
+
+	background: linear-gradient(to right, #1d8dee 0%, #1d8dee 45%, #f0f0f0 45%, #f0f0f0 100%);
+}
+
+#SwitchPage span 
+{
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#donate_amount
+{
+	text-align: center;
+	text-indent: 1px;
+  width: 80%;
+  background-color : #F0F0F0;
+}
+
+#colormode
+{
+	cursor: pointer;
+
+	position: absolute; 
+
+	left: 16.6375%;
+	right: 72.2225%;
+
+	top: 90.65%;
+	bottom: 3%;
+	width: 11.15%; 
+	height: 6.35%; 
+
+	background: url('https://tyamoe.com/images/colorLight.png'); 
+	background-size: 100% 100%;
+
+	transform: scale(1.25, 1.25);
+}
+
+#fullscreen
+{
+	cursor: pointer;
+
+	position: absolute; 
+
+	left: 72.2225%;
+	right: 16.6375%;
+
+	top: 90.65%;
+	bottom: 3%;
+	width: 11.15%; 
+	height: 6.35%; 
+
+	background: url('https://tyamoe.com/images/maximize.png'); 
+	background-size: 100% 100%;
+
+	transform: scale(1.25, 1.25);
+}
+
+a.donate
+{
+	cursor: pointer;
+
+	position: absolute;
+
+	left: 44.425%;
+	right: 44.425%;
+
+	top: 90.65%;
+	bottom: 3%;
+	width: 11.15%; 
+	height: 6.35%; 
+
+	background: url('https://tyamoe.com/images/donate.png'); 
+	background-size: 100% 100%;
+
+	transform: scale(1.25, 1.25);
+}
+
+div.selector
+{
+	position: absolute;
+	left: 20.0%;
+	top: 91.0%;
+	right: 50.0%;
+	bottom: 2%;
+	width: 30.0%; 
+	height: 7.0%; 
+	border-style: groove;
+	border-width: 1px;
+	border-color: white;
+	font-size: 1em;
+	font-weight: bold;
+	text-align: center;
+	color: rgba(220, 220, 220, 1.0);
+	background:rgba(46, 204, 113, 1.0);
+}
+
+div.background
+{
+	background-color: transparent !important;
+	background: url("https://tyamoe.com/images/basic.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
+div.sidebar
+{
+	background-color: transparent !important;
+	//background:rgba(240,240,240,1.0);
+	background: url("https://tyamoe.com/images/sidebarTexture1.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	border-style: groove;
+  border-width: 0px 0px 0px 5px;
+	border-color: rgba(150, 150, 150, 1.0);
+}
+
+div.taskbar
+{
+	background-color: transparent !important;
+	background: url("https://tyamoe.com/images/taskbarTexture.png");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	overflow-x: scroll;
+	overflow: hidden;
+	white-space: nowrap;
+	border-style: groove;
+  border-width: 5px 0px 0px 0px;
+	border-color: rgba(150, 150, 150, 1.0);
+}
+
+div.item
+{
+	position:relative;
+	width:10.104166666666666666666666666667%;
+	//width:3.7640625%;
+	height: 100%;
+	//z-index:0;
+	background-color: transparent !important;
+	background: url("https://tyamoe.com/images/tyamoe.png");
+	background-size: 90% 90%;
+	background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tooltip .tooltiptext 
+{
+    visibility: hidden;
+    width: 120px;
+    background-color: white;
+    color: #000;
+    text-align: center;
+    padding: 5px 2px;
+    //border-radius: 6px;
+		border-style: solid;
+    border-color: black;
+  	border-width: 2px;
+ 
+    position: relative;
+    left: 42%;
+    top: 50%;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext 
+{
+    visibility: visible;
+}
+
+#tyamoe
+{
+	background: url("https://tyamoe.com/images/tyamoe.png");
+}
+
+#solid
+{
+	background: url("https://tyamoe.com/images/solid.png");
+}
+
+#binds
+{
+	background: url("https://tyamoe.com/images/binds.png");
+}
+
+#taps
+{
+	background: url("https://tyamoe.com/images/taps.png");
+}
+
+#clicker
+{
+	background: url("https://tyamoe.com/images/clicker.png");
+}
+
+#basee
+{
+	background: url("https://tyamoe.com/images/basee.png");
+}
+
+.hide 
+{
+	display: none;
+}
+
+div.donate li 
+{
+    list-style: none;
+    display: inline-block;
+    padding: 20px;
+    background-color: #2C3E50;
+    margin: 10px;
+    width: 18%;
+    text-align: center;
+    color: #ecf0f1;
+    font-weight: bold;
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+div.donate li:hover 
+{
+    opacity: 1;
+}
+
+div.donate li.active 
+{
+    opacity: 1;
+    background-color: #2ecc71;
+}
+
+
+div.donate li > input 
+{
+    max-width: 56px;
+    border: none;
+    padding: 10px;
+    font-family: "Open Sans", sans-serif;
+    margin-left: 10px;
+}
+
+div.donate li:last-of-type 
+{
+    height: 30px;
+    padding-top: 13px;
+}
+
+div.donate ul 
+{
+    padding: 0;
+    margin: 0;
+}
+
+button.btn.bg-orange 
+{
+    padding: 20px 160px;
+}
+
+div.donate 
+{
+    text-align: center;
+}

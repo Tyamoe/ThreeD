@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<link href="css/desktop.css" rel="stylesheet" />
+
+<body>
+
+<div id="ViewerDiv" class="ViewerDiv" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;"></div>
+
+<div id="FileSelector" class="FileSelector" style="position: absolute; left:0.5%; bottom:1.5%; width:15vw; height:3vw; background-color: white;">
+<input type="file" id="fileSelector" onchange="SelectFile(this.files)">
+<button id="loadFile" onClick="LoadSelectFile()">Load</button>
+</div>
+
+</body>
+
+<script src="vendor/jquery-3.3.1.min.js"></script>
+<script src="viewer.js"></script>
+<script src="vendor/gl-matrix.js"></script>
+<script src="main.js"></script>
+<script src="mesh.js"></script>
+<script src="object.js"></script>
+<script src="shader.js"></script>
+<script src="model.js"></script>
+<script src="render.js"></script>
+<script src="input.js"></script>
+<script src="picking.js"></script>
+
+</html>
+

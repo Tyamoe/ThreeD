@@ -53,9 +53,10 @@ function SelectFile(files)
 
 function LoadSelectFile()
 {
-	console.log("Loading: " + fileToLoad.name);
+	//console.log("Loading: " + fileToLoad.name);
 	
-	fileToLoad.text().then(text => console.log(text) /* Send Obj Data */ );
+	//fileToLoad.text().then(text => console.log(text) /* Send Obj Data */ );
+	loadObj(fileToLoad);
 }
 
 function togglePause()

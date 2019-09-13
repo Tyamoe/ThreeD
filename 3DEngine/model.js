@@ -211,3 +211,46 @@ function isPowerOf2(value)
 {
   return (value & (value - 1)) == 0;
 }
+
+function loadObj(fileStream)
+{
+	console.log("Loading: " + fileStream.name);
+	var reader = new FileReader();
+	
+	reader.onload = function(progressEvent)
+	{
+		//console.log("reader: " + this.result);
+		
+		var Vertices = [];
+		var Indices = [];
+		
+		var lines = this.result.split('\n');
+		for(var i = 0; i < lines.length; i++)
+		{
+			var line = lines[i].split(/\s+/);
+			if(line && line.length > 0)
+			{
+				var lineType = line[0];
+				
+				if(lineType == "v")
+				{
+					var cunt = vec3.create();
+					vec3.set(cunt, parseFloat(line[1]), parseFloat(line[2]), parseFloat(line[3]));
+					console.log("Verts: " + cunt);
+					
+					Vertices.push(cunt);
+				}
+				else if(lineType == "f")
+				{
+					var cunt = vec3.create();
+					vec3.set(cunt, parseInt(line[1]), parseInt(line[2]), parseInt(line[3]));
+					console.log("Indices: " + cunt);
+					
+					Indices.push(cunt);
+				}
+			}
+		}
+	};
+	
+	reader.readAsText(fileStream);
+}

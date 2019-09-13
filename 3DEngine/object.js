@@ -7,6 +7,19 @@ var Obj2List = [];
 var abc = [0, 72, 144, 216, 288];
 var cba = 0.5;
 
+var ObjModel = function()
+{
+	this.name = "t";
+	
+	this.transform = {};
+	
+	this.vertices = [];
+	this.indices = [];
+	
+	this.vertexNormals = [];
+	this.faceNormals = [];
+}
+
 var Mouse = function() 
 { 
 	this.firstMouse = true;

@@ -1,24 +1,8 @@
 var ObjCount = 0;
 var ObjList = [];
 
-var Obj2Count = 0;
-var Obj2List = [];
-
 var abc = [0, 72, 144, 216, 288];
 var cba = 0.5;
-
-var ObjModel = function()
-{
-	this.name = "t";
-	
-	this.transform = {};
-	
-	this.vertices = [];
-	this.indices = [];
-	
-	this.vertexNormals = [];
-	this.faceNormals = [];
-}
 
 var Mouse = function() 
 { 
@@ -36,7 +20,6 @@ var Camera = function()
 	this.fov = 45;
 
 	this.rotation = 0.25;
-	this.radius = 12;
 
 	this.Pos = vec3.create();
 	this.Front = vec3.create();
@@ -45,114 +28,54 @@ var Camera = function()
 	this.view = mat4.create();
 }
 
-var Transform = function()
+var Model = function(Name, Mesh, Color)
 {
-	this.vel = vec3.create();
-	this.pos = vec3.create();
-	this.scale = vec3.create();
-	this.destination = vec3.create();
-
-	vec3.set(this.vel, 1, 1, 1);
-	vec3.set(this.pos, 0, 0, 0);
-	vec3.set(this.destination, 0, 0, 0);
-	vec3.set(this.scale, 1, 1, 1);
-
-	this.oldPosX = 0;
-	this.oldPosY = 0;
-	this.oldPosZ = 0;
-
-	this.rotation = 0.0;
-	this.axis = [1, 0, 0];
-
-	this.lerp = 0.01;
-}
-
-var Clock = function()
-{
-	this.currTime = 0;
-	this.lastTime = 0;
-	this.elapsedTime = 0;
-	this.time = 0;
-
-	this.tick = 0;
-}
-
-var Data = function(link1, download1, download2)
-{
-	this.link = link1;
-	this.download = download1;
-	this.download2 = download2;
-}
-
-//Object
-var Obj = function(name, models) 
-{
-	this.name = name;
-	this.textured = false;
-	this.shader = null;
-
-	this.data = {};
-
-	this.tint = [1.0, 1.0, 1.0, 1.0];
-
-	this.meshes = models;
-	this.models = {};
-
-	this.TextureLocation;
-	this.TextureID = 0;
-	this.TextureUnit;
-
-	this.vMatrix = mat4.create();
-	this.mvMatrix = mat4.create();
-	this.mvMatrixStack = [];
-	this.pMatrix = mat4.create();
-
+	this.name = Name;
+	
 	this.transform = {};
-	this.clock = {};
+	this.mesh = Mesh;
+
+	this.color = vec3.create();
+	this.shadingColor = [0.5, 0.5, 0.5, 1.0];
 }
 
-//Object
-var Obj2 = function(name, vertices, indices) 
+// Legacy Object Class
+var Obj = function(name, Mesh) 
 {
 	this.name = name;
 	this.inFocus = Focus.OFF;
 
+	this.renderMode = RenderMode.Phong;
 	this.shader = null;
 	this.pickShader = null;
 
-	this.data = {};
+	this.skybox = false;
+	this.animate = false;
 
 	this.pickID;
 
+	this.shadingColor = [1.0, 1.0, 1.0, 1.0];
 	this.tint = [1.0, 1.0, 1.0, 1.0];
 
-	this.vertexBuffer = vertices;
-	this.indexBuffer = indices;
+	this.transform = {};
+	this.clock = {};
+
+	this.mesh = Mesh;
+
+	this.AttrLocPosition = -1;
+	this.AttrLocTexCoords = -1;
+	this.AttrLocNormal = -1;
 
 	this.texture = null;
 	this.textureArray = [];
 	this.textureID = 0;
 
-	this.skybox = false;
-
-	this.VertexBufferObject = gl.createBuffer();
-	gl.bindBuffer(gl.ARRAY_BUFFER, this.VertexBufferObject);
-	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-
-	this.IndexBufferObject = gl.createBuffer();
-	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.IndexBufferObject);
-	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
-
-	this.AttrLocPosition = -1;
-	this.AttrLocTexCoords = -1;
-
 	this.vMatrix = mat4.create();
 	this.mvMatrix = mat4.create();
 	this.mvMatrixStack = [];
 	this.pMatrix = mat4.create();
 
-	this.transform = {};
-	this.clock = {};
+	this.MVPMatrix = mat4.create();
 }
 
 function getObjIDbyName(name)
@@ -164,13 +87,6 @@ function getObjIDbyName(name)
 			return i;
 		}
 	}
-	for(var i = 0; i < Obj2Count; i++)
-	{
-		if(Obj2List[i].name == name)
-		{
-			return i;
-		}
- 	}
  	return 0;
 }
 
@@ -181,13 +97,6 @@ function getObjByName(name)
 		if(ObjList[i].name == name)
 		{
 			return ObjList[i];
-		}
- 	}
-	for(var i = 0; i < Obj2Count; i++)
-	{
-		if(Obj2List[i].name == name)
-		{
-			return Obj2List[i];
 		}
  	}
  	return ObjList[0];

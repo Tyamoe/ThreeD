@@ -3,85 +3,66 @@ function Pick(x, y, mode1)
     if(mode1 == Mode.ORBIT)
     {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        for(var i = 0; i < Obj2Count; i++)
+
+        var persp = mat4.create();
+        mat4.perspective(persp, camera.fov * Math.PI / 180.0, canvas.width / canvas.height, 0.01, 1000.0);
+        mat4.mul(PV, persp, camera.view);
+
+        for(var i = 0; i < ObjCount; i++)
         {
-            mat4.copy(Obj2List[i].vMatrix, camera.view);
+            var obj = ObjList[i];
 
-            mat4.perspective(Obj2List[i].pMatrix, camera.fov * Math.PI / 180.0, canvas.width / canvas.height, 0.01, 1000.0);
+            mat4.copy(obj.vMatrix, camera.view);
+            mat4.copy(obj.pMatrix, persp);
 
-            mat4.identity(Obj2List[i].mvMatrix);
+            mat4.identity(obj.mvMatrix);
+            mat4.identity(obj.MVPMatrix);
 
-            mat4.translate(Obj2List[i].mvMatrix, Obj2List[i].mvMatrix, [(Obj2List[i].transform.pos[0]), (Obj2List[i].transform.pos[1]), (Obj2List[i].transform.pos[2])]);
+            mat4.translate(obj.mvMatrix, obj.mvMatrix, [(obj.transform.pos[0]), (obj.transform.pos[1]), (obj.transform.pos[2])]);
+            mat4.rotate(obj.mvMatrix, obj.mvMatrix, obj.transform.rotation, obj.transform.axis);
+            mat4.scale(obj.mvMatrix, obj.mvMatrix, [(obj.transform.scale[0]), (obj.transform.scale[1]), (obj.transform.scale[2])]);
             
-            mat4.rotate(Obj2List[i].mvMatrix, Obj2List[i].mvMatrix, Obj2List[i].transform.rotation, Obj2List[i].transform.axis);
+            mat4.mul(obj.MVPMatrix, PV, obj.mvMatrix);
 
-            mat4.scale(Obj2List[i].mvMatrix, Obj2List[i].mvMatrix, [(Obj2List[i].transform.scale[0]), (Obj2List[i].transform.scale[1]), (Obj2List[i].transform.scale[2])]);
-            
-            mvPushMatrix(Obj2List[i]);
+            gl.bindBuffer(gl.ARRAY_BUFFER, obj.mesh.VertexBufferObject);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.mesh.IndexBufferObject);
 
-            if(Obj2List[i].pickShader != null)
+            if(obj.pickShader != null)
             {
-                gl.useProgram(Obj2List[i].pickShader);
-            }
-            else
-            {
-                gl.useProgram(Obj2List[i].shader);
-            }
+                shaderPick.applyAttribute(obj);
+                gl.useProgram(shaderPick);
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, Obj2List[i].VertexBufferObject);
-
-            applyAttributes(Obj2List[i]);
-
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, Obj2List[i].IndexBufferObject);
-
-            if(Obj2List[i].pickShader != null)
-            {
-                setPickMatrixUniforms(Obj2List[i], 1);
-                Obj2List[i].AttrLocPosition = gl.getAttribLocation(Obj2List[i].pickShader, 'vertPosition');
-                // Convert "i", the integer mesh ID, into an RGB color
                 var r = i + 100 + 1;
                 var g = i + 100 + 1;
                 var b = i + 100 + 1;
 
-                gl.uniform4fv(Obj2List[i].pickShader.color, new Float32Array([r/255.0, g/255.0, b/255.0, 1.0]));
+                shaderPick.setUniforms(obj, new Float32Array([r/255.0, g/255.0, b/255.0, 1.0]));
             }
             else
             {
-                setMatrixUniforms(Obj2List[i]);
+                shaderSkybox.applyAttribute(obj);
+                gl.useProgram(shaderSkybox);
+                shaderSkybox.setUniforms(obj);
             }
 
-            if(Obj2List[i].skybox)
+            if(obj.skybox)
             {
                 var oldRange = gl.getParameter(gl.DEPTH_RANGE);
 
                 gl.depthRange(1.0, 1.0);
-
                 gl.disable(gl.CULL_FACE);
                 
                 gl.activeTexture(gl.TEXTURE0);
-        
-                gl.bindTexture(gl.TEXTURE_CUBE_MAP, Obj2List[i].texture);
+                gl.bindTexture(gl.TEXTURE_CUBE_MAP, obj.texture);
 
-                gl.drawElements(gl.TRIANGLES, Obj2List[i].indexBuffer.length, gl.UNSIGNED_SHORT, 0);
+                gl.drawElements(gl.TRIANGLES, obj.mesh.indices.length, gl.UNSIGNED_SHORT, 0);
 
                 gl.enable(gl.CULL_FACE);
-                
                 gl.depthRange(oldRange[0], oldRange[1]); 
             }
             else
             {
-                //gl.bindTexture(gl.TEXTURE_2D, Obj2List[i].texture);
-
-                //gl.activeTexture(gl.TEXTURE0);
-
-                gl.drawElements(gl.TRIANGLES, Obj2List[i].indexBuffer.length, gl.UNSIGNED_SHORT, 0);
-            }
-
-            mvPopMatrix(Obj2List[i]);
-
-            if(Obj2List[i].pickShader != null)
-            {
-                Obj2List[i].AttrLocPosition = gl.getAttribLocation(Obj2List[i].shader, 'vertPosition');
+                gl.drawElements(gl.TRIANGLES, obj.mesh.indices.length, gl.UNSIGNED_SHORT, 0);
             }
         }
 
@@ -93,10 +74,11 @@ function Pick(x, y, mode1)
 
         if(pickID < 0)
         {
-             return;
+            console.log("No " + pixels);
+            return;
         }
 
-        if(pickID < Obj2Count)
+        if(pickID < ObjCount)
         {
             var newPos = vec3.create();
             var newFront = vec3.create();
@@ -107,98 +89,43 @@ function Pick(x, y, mode1)
                 
             ObjInFocus = pickID;
 
-            Obj2List[pickID].inFocus = Focus.TRANSIT_TO;
+            ObjList[pickID].inFocus = Focus.TRANSIT_TO;
             
-            vec3.subtract(Obj2List[pickID].transform.vel, newPos, Obj2List[pickID].transform.pos);
+            vec3.subtract(ObjList[pickID].transform.vel, newPos, ObjList[pickID].transform.pos);
 
-            vec3.copy(Obj2List[pickID].transform.destination, newPos);
+            vec3.copy(ObjList[pickID].transform.destination, newPos);
             mode = Mode.FOCUS;
         }
     }
     else if(mode == Mode.FOCUS)
     {
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        for(var i = 0; i < Obj2Count; i++)
-        {
-            mat4.copy(Obj2List[i].vMatrix, camera.view);
-
-            mat4.perspective(Obj2List[i].pMatrix, camera.fov * Math.PI / 180.0, canvas.width / canvas.height, 0.01, 1000.0);
-
-            mat4.identity(Obj2List[i].mvMatrix);
-
-            mat4.translate(Obj2List[i].mvMatrix, Obj2List[i].mvMatrix, [(Obj2List[i].transform.pos[0]), (Obj2List[i].transform.pos[1]), (Obj2List[i].transform.pos[2])]);
-            
-            mat4.rotate(Obj2List[i].mvMatrix, Obj2List[i].mvMatrix, Obj2List[i].transform.rotation, Obj2List[i].transform.axis);
-
-            mat4.scale(Obj2List[i].mvMatrix, Obj2List[i].mvMatrix, [(Obj2List[i].transform.scale[0]), (Obj2List[i].transform.scale[1]), (Obj2List[i].transform.scale[2])]);
-            
-            mvPushMatrix(Obj2List[i]);
-
-            gl.useProgram(Obj2List[i].shader);
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, Obj2List[i].VertexBufferObject);
-
-            applyAttributes(Obj2List[i]);
-
-            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, Obj2List[i].IndexBufferObject);
-
-            setMatrixUniforms(Obj2List[i]);
-
-            if(Obj2List[i].skybox)
-            {
-                var oldRange = gl.getParameter(gl.DEPTH_RANGE);
-
-                gl.depthRange(1.0, 1.0);
-
-                gl.disable(gl.CULL_FACE);
-                
-                gl.activeTexture(gl.TEXTURE0);
-        
-                gl.bindTexture(gl.TEXTURE_CUBE_MAP, Obj2List[i].texture);
-
-                gl.drawElements(gl.TRIANGLES, Obj2List[i].indexBuffer.length, gl.UNSIGNED_SHORT, 0);
-
-                gl.enable(gl.CULL_FACE);
-                
-                gl.depthRange(oldRange[0], oldRange[1]); 
-            }
-            else
-            {
-                gl.bindTexture(gl.TEXTURE_2D, Obj2List[i].texture);
-
-                gl.activeTexture(gl.TEXTURE0);
-
-                gl.drawElements(gl.TRIANGLES, Obj2List[i].indexBuffer.length, gl.UNSIGNED_SHORT, 0);
-            }
-
-            mvPopMatrix(Obj2List[i]);
-        }
+        DrawObjects();
 
         var pixels = new Uint8Array(4);
         gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
 
         console.log("Focus Mode Seatching for button clicks: " + pixels);
-        //Search for button clicks
 
+        //Search for button clicks
         if(parsePixel(pixels) == Pixel.EXIT)
         {
             //Set object to return back to orbit
-            Obj2List[ObjInFocus].clock.tick = 0;
-            Obj2List[ObjInFocus].inFocus = Focus.TRANSIT_FROM;
-            Obj2List[ObjInFocus].texture = Obj2List[ObjInFocus].textureArray[0];
+            ObjList[ObjInFocus].clock.tick = 0;
+            ObjList[ObjInFocus].inFocus = Focus.TRANSIT_FROM;
+            ObjList[ObjInFocus].texture = ObjList[ObjInFocus].textureArray[0];
             //console.log("Exit button clicked: " + Obj2List[ObjInFocus].name);
         }
         else if(parsePixel(pixels) == Pixel.DOWNLOAD)
         {
             //download
             toggleFullScreenButton();
-            window.open(Obj2List[ObjInFocus].data.download, '_blank');
+            window.open(ObjList[ObjInFocus].data.download, '_blank');
         }
         else if(parsePixel(pixels) == Pixel.DOWNLOAD2)
         {
             //download
             toggleFullScreenButton();
-            window.open(Obj2List[ObjInFocus].data.download2, '_blank');
+            window.open(ObjList[ObjInFocus].data.download2, '_blank');
         }
         else if(parsePixel(pixels) == Pixel.NEXT)
         {
@@ -212,12 +139,12 @@ function Pick(x, y, mode1)
         {
             //Open link
             toggleFullScreenButton();
-            window.open(Obj2List[ObjInFocus].data.link, '_blank');
+            window.open(ObjList[ObjInFocus].data.link, '_blank');
         }
         else
         {
             //Invalid
-            console.log("Invalid CLick: " + Obj2List[ObjInFocus].name);
+            console.log("Invalid CLick: " + ObjList[ObjInFocus].name);
         }
     }
 }
@@ -260,15 +187,4 @@ function parsePixel(pixel)
     }
 
     return Pixel.INVALID;
-}
-
-function setPickMatrixUniforms(obj, pick) 
-{
-    gl.uniformMatrix4fv(obj.pickShader.pMatrixUniform, false, obj.pMatrix);
-    gl.uniformMatrix4fv(obj.pickShader.mvMatrixUniform, false, obj.mvMatrix);
-    gl.uniformMatrix4fv(obj.pickShader.vMatrixUniform, false, obj.vMatrix);
-
-    var normalMatrix = mat3.create();
-    mat3.normalFromMat4(normalMatrix, obj.mvMatrix);
-    gl.uniformMatrix3fv(obj.pickShader.nMatrixUniform, false, normalMatrix);
 }

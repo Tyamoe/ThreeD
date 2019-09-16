@@ -26,15 +26,37 @@ function handleKeys(event)
     return;
   }
   
-  console.log("IDJijjd");
+  //console.log("IDJijjd");
   
   if(!canvasInFocus)
   {
     return;
   }
 
-  var testj = getObjByName("krunk");
-  var testj2 = getObjByName("krunk");
+  var testj = getObjByName("bunny.obj");
+  var testj2 = getObjByName("sphere1");
+
+  //console.log(testj);
+  //console.log("--------------------------------------------");
+  //console.log(testj2);
+
+  if(event.keyCode == 187 && !firefox)
+  {//Add
+    updateScale(testj, 0.5, 0.5, 0.5);
+  }
+  if(event.keyCode == 189 && !firefox)
+  {//Sub
+    updateScale(testj, -0.5, -0.5, -0.5);
+  }
+
+  if(event.keyCode == 61 && firefox)
+  {//Add
+    updateScale(testj, 0.5, 0.5, 0.5);
+  }
+  if(event.keyCode == 173 && firefox)
+  {//Sub
+    updateScale(testj, -0.5, -0.5, -0.5);
+  }
 
   if(event.keyCode == 49)
   {//1
@@ -154,24 +176,6 @@ function handleKeys(event)
   {//F
     //Flip
     camera.Front[2] *= -1;
-  }
-
-  if(event.keyCode == 187 && !firefox)
-  {//Add
-   	updateScale(testj2, 0.5, 0.5, 0.5);
-  }
-  if(event.keyCode == 189 && !firefox)
-  {//Sub
-  	updateScale(testj2, -0.5, -0.5, -0.5);
-  }
-
-  if(event.keyCode == 61 && firefox)
-  {//Add
-		updateScale(testj2, 0.5, 0.5, 0.5);
-  }
-  if(event.keyCode == 173 && firefox)
-  {//Sub
- 		updateScale(testj2, -0.5, -0.5, -0.5);
   }
 
   if(event.keyCode == 51)

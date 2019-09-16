@@ -1,93 +1,96 @@
 //Paths
-var modelPath = "";//"https://tyamoe.com/scripts/models/"
-var cubePath = "images/";//"https://tyamoe.com/scripts/models/cube/"
+var modelPath = "https://tyamoe.com/scripts/models/";
+var cubePath = "https://tyamoe.com/scripts/models/cube/";
 
-function IncrementCount()
-{
-	ObjCount++;
-  //console.log("Incrementing Count: ", ObjCount);
-}
-
-//Objects/Models
-
-function loadObjFromVerts(name1, Vertices, Indices, textArray, skybox)
+function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 {	
-	Obj2List.push(new Obj2(name1, Vertices, Indices));
-
-	Obj2List[Obj2Count].transform = new Transform();
-	Obj2List[Obj2Count].clock = new Clock();
-
-	Obj2List[Obj2Count].skybox = skybox;
-
-	if(!skybox)
-	{
-		Obj2List[Obj2Count].pickShader = shaderPick;
-	}
-
-	Obj2List[Obj2Count].shader = (skybox) ? shaderSkybox : shaderSmall;
-
-	Obj2List[Obj2Count].AttrLocPosition = gl.getAttribLocation(Obj2List[Obj2Count].shader, 'vertPosition');
-	Obj2List[Obj2Count].AttrLocTexCoords = gl.getAttribLocation(Obj2List[Obj2Count].shader, 'vertTexCoord');
-
-	if(!skybox)
-	{
-		for(var i = 0; i < textArray.length; i++)
+	if(isString(mesh))
+	{	
+		var blob = null;
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", mesh);
+		xhr.responseType = "blob";
+		xhr.onload = function() 
 		{
-			Obj2List[Obj2Count].textureArray[i] = loadTexture(gl, textArray[i]);
+		    blob = xhr.response;
+		    loadObj(blob, name1);
 		}
-		Obj2List[Obj2Count].texture = Obj2List[Obj2Count].textureArray[0];
+		xhr.send();
 
-		var theta = (degToRad(abc[Obj2Count]));
-
-		var x = 6 * Math.sin(theta);
-		var z = 6 * Math.cos(theta);
-
-		Obj2List[Obj2Count].transform.pos[0] = x;
-		Obj2List[Obj2Count].transform.pos[2] = z;
+		return;
 	}
-	else
+
+	ObjList.push(new Obj(name1, mesh));
+
+	ObjList[ObjCount].transform = new Transform();
+	ObjList[ObjCount].clock = new Clock();
+
+	ObjList[ObjCount].renderMode = renderMode;
+	ObjList[ObjCount].animate = Animate;
+
+	if(renderMode == RenderMode.Skybox)
 	{
-		Obj2List[Obj2Count].texture = loadCubeMap(gl, textArray);
-		Obj2List[Obj2Count].transform.pos.z = 0;//-7;
-		updateScale(Obj2List[Obj2Count], 34, 34, 34);
+		ObjList[ObjCount].skybox = true;
+		ObjList[ObjCount].shader = shaderSkybox;
+
+		ObjList[ObjCount].texture = loadCubeMap(gl, Shading);
+		ObjList[ObjCount].transform.pos.z = 0;//-7;
+		updateScale(ObjList[ObjCount], 34, 34, 34);
+
+		ObjList[ObjCount].textureID = texturesLoaded;
+		texturesLoaded++;
+	}
+	else if(renderMode == RenderMode.Texture)
+	{
+		ObjList[ObjCount].pickShader = shaderPick;
+		ObjList[ObjCount].shader = shaderSmall;
+
+		for(var i = 0; i < Shading.length; i++)
+		{
+			ObjList[ObjCount].textureArray[i] = loadTexture(gl, Shading[i]);
+		}
+		ObjList[ObjCount].texture = ObjList[ObjCount].textureArray[0];
+
+		if(Animate)
+		{
+			var theta = (degToRad(abc[ObjCount]));
+
+			var x = 6 * Math.sin(theta);
+			var z = 6 * Math.cos(theta);
+
+			ObjList[ObjCount].transform.pos[0] = x;
+			ObjList[ObjCount].transform.pos[2] = z;
+		}
+
+		ObjList[ObjCount].textureID = texturesLoaded;
+		texturesLoaded++;
+	}
+	else if(renderMode == RenderMode.Phong)
+	{
+		ObjList[ObjCount].pickShader = shaderPick;
+		ObjList[ObjCount].shader = shaderPhong;
+
+		ObjList[ObjCount].shadingColor = Shading;
+
+		if(Animate)
+		{
+			var theta = (degToRad(abc[ObjCount]));
+
+			var x = 6 * Math.sin(theta);
+			var z = 6 * Math.cos(theta);
+
+			ObjList[ObjCount].transform.pos[0] = x;
+			ObjList[ObjCount].transform.pos[2] = z;
+		}
 	}
 
-	Obj2List[Obj2Count].textureID = texturesLoaded;
-	texturesLoaded++;
+	ObjList[ObjCount].AttrLocPosition = gl.getAttribLocation(ObjList[ObjCount].shader, 'vertPosition');
+	ObjList[ObjCount].AttrLocTexCoords = gl.getAttribLocation(ObjList[ObjCount].shader, 'vertTexCoord');
+	ObjList[ObjCount].AttrLocNormal = gl.getAttribLocation(ObjList[ObjCount].shader, 'vertNormal');
 
-	//console.log("Obj2:", Obj2List[Obj2Count]);
-	Obj2Count++;
+	ObjCount++;
 
-	return Obj2List[Obj2Count];
-}
-
-function loadModel(name1, objPath, mtlPath, text)
-{
-	//console.log('Loading Model');
-	let p = OBJ.downloadModels([
-        {
-            name: name1,
-            obj: objPath,
-            mtl: mtlPath
-         }
-    ]);
-
-    p.then(models => {
-        for ([name, mesh] of Object.entries(models))
-        {
-            //console.log("Name:", name);
-            //console.log("Mesh:", mesh);
-        }
-
-    		ObjList.push(new Obj(name1, models));
-
-    		ObjList[ObjCount].transform = new Transform();
-    		ObjList[ObjCount].clock = new Clock();
-    		ObjList[ObjCount].textured = text;
-
-    		//console.log("Obj:", ObjList[ObjCount]);
-       	IncrementCount();
-    });
+	return ObjList[ObjCount];
 }
 
 function loadTexture(gl, url) 
@@ -102,34 +105,31 @@ function loadTexture(gl, url)
   const border = 0;
   const srcFormat = gl.RGBA;
   const srcType = gl.UNSIGNED_BYTE;
-  const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
-  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                width, height, border, srcFormat, srcType,
-                pixel);
+
+  const pixel = new Uint8Array([0, 0, 255, 255]);  // Texture loading color
+
+  gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, width, height, border, srcFormat, srcType, pixel);
 
   const image = new Image();
+  image.crossOrigin = "";
   image.onload = function() 
   {
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                  srcFormat, srcType, image);
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
 
     if (isPowerOf2(image.width) && isPowerOf2(image.height)) 
     {
-       // Yes, it's a power of 2. Generate mips.
        gl.generateMipmap(gl.TEXTURE_2D);
     } 
     else 
     {
-       // No, it's not a power of 2. Turn of mips and set
-       // wrapping to clamp to edge
        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     }
   };
 
-  image.src = url;
+  image.src = modelPath + url;
 
   return texture;
 }
@@ -138,24 +138,22 @@ var texID;
 
 function loadCubeMap(gl, imgAry)
 {
-	//RIGHT,LEFT,TOP,BOTTOM,BACK,FRONT
-		//Cube Constants values increment, so easy to start with right and just add 1 in a loop
-		//To make the code easier costs by making the imgAry coming into the function to have
-		//the images sorted in the same way the constants are set.
-		//	TEXTURE_CUBE_MAP_POSITIVE_X - Right	:: TEXTURE_CUBE_MAP_NEGATIVE_X - Left
-		//	TEXTURE_CUBE_MAP_POSITIVE_Y - Top 	:: TEXTURE_CUBE_MAP_NEGATIVE_Y - Bottom
-		//	TEXTURE_CUBE_MAP_POSITIVE_Z - Back	:: TEXTURE_CUBE_MAP_NEGATIVE_Z - Front
+	//	RIGHT,LEFT,TOP,BOTTOM,BACK,FRONT
+	//	TEXTURE_CUBE_MAP_POSITIVE_X - Right	:: TEXTURE_CUBE_MAP_NEGATIVE_X - Left
+	//	TEXTURE_CUBE_MAP_POSITIVE_Y - Top 	:: TEXTURE_CUBE_MAP_NEGATIVE_Y - Bottom
+	//	TEXTURE_CUBE_MAP_POSITIVE_Z - Back	:: TEXTURE_CUBE_MAP_NEGATIVE_Z - Front
 
 	texID = gl.createTexture();
 	gl.bindTexture(gl.TEXTURE_CUBE_MAP, texID);
 
-	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);	//Setup up scaling
-	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);	//Setup down scaling
-	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);	//Stretch image to X position
-	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);	//Stretch image to Y position
-	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);	//Stretch image to Z position
+	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE);
 
 	const image1 = new Image();
+  	image1.crossOrigin = "";
 	image1.src = cubePath + imgAry[0];
 	image1.onload = function() 
 	{
@@ -164,6 +162,7 @@ function loadCubeMap(gl, imgAry)
 	}
 
 	const image2 = new Image();
+  	image2.crossOrigin = "";
 	image2.src = cubePath + imgAry[1];
 	image2.onload = function() 
 	{
@@ -172,6 +171,7 @@ function loadCubeMap(gl, imgAry)
 	}
 
 	const image3 = new Image();
+  	image3.crossOrigin = "";
 	image3.src = cubePath + imgAry[2];
 	image3.onload = function() 
 	{
@@ -180,6 +180,7 @@ function loadCubeMap(gl, imgAry)
 	}
 
 	const image4 = new Image();
+  	image4.crossOrigin = "";
 	image4.src = cubePath + imgAry[3];
 	image4.onload = function() 
 	{
@@ -188,6 +189,7 @@ function loadCubeMap(gl, imgAry)
 	}
 
 	const image5 = new Image();
+  	image5.crossOrigin = "";
 	image5.src = cubePath + imgAry[4];
 	image5.onload = function() 
 	{
@@ -197,6 +199,7 @@ function loadCubeMap(gl, imgAry)
 	}
 
 	const image6 = new Image();
+  	image6.crossOrigin = "";
 	image6.src = cubePath + imgAry[5];
 	image6.onload = function() 
 	{
@@ -207,23 +210,23 @@ function loadCubeMap(gl, imgAry)
 	return texID;
 }
 
-function isPowerOf2(value) 
-{
-  return (value & (value - 1)) == 0;
-}
-
-function loadObj(fileStream)
+function loadObj(fileStream, Name)
 {
 	console.log("Loading: " + fileStream.name);
 	var reader = new FileReader();
 	
 	reader.onload = function(progressEvent)
 	{
-		//console.log("reader: " + this.result);
-		
 		var Vertices = [];
+		var NormalsVertices = [];
+		var NormalsFace = [];
 		var Indices = [];
+
+		var NormalsVertexSum = [];
 		
+		var zero = vec3.create();
+		vec3.set(zero, 0, 0, 0);
+		var hasNormals = false;
 		var lines = this.result.split('\n');
 		for(var i = 0; i < lines.length; i++)
 		{
@@ -234,23 +237,106 @@ function loadObj(fileStream)
 				
 				if(lineType == "v")
 				{
-					var cunt = vec3.create();
-					vec3.set(cunt, parseFloat(line[1]), parseFloat(line[2]), parseFloat(line[3]));
-					console.log("Verts: " + cunt);
-					
-					Vertices.push(cunt);
+					Vertices.push(parseFloat(line[1]));
+					Vertices.push(parseFloat(line[2]));
+					Vertices.push(parseFloat(line[3]));
+
+					NormalsVertexSum.push(vec3.set(vec3.create(), 0, 0, 0));
 				}
 				else if(lineType == "f")
 				{
-					var cunt = vec3.create();
-					vec3.set(cunt, parseInt(line[1]), parseInt(line[2]), parseInt(line[3]));
-					console.log("Indices: " + cunt);
-					
-					Indices.push(cunt);
+					Indices.push(parseInt(line[1]) - 1);
+					Indices.push(parseInt(line[2]) - 1);
+					Indices.push(parseInt(line[3]) - 1);
+				}
+				else if(lineType == "n")
+				{
+					hasNormals = true;
 				}
 			}
 		}
+
+		if(!hasNormals)
+		{
+			var v1 = vec3.create();
+			var v2 = vec3.create();
+			var v3 = vec3.create();
+
+			var vec1 = vec3.create();
+			var vec2 = vec3.create();
+
+			var crossP = vec3.create();
+
+			// Face Normals
+			for(var i = 0; i < (Indices.length / 3); i++)
+			{
+				var ii = i * 3;
+				var vi1 = Indices[ii + 0] * 3;
+				var vi2 = Indices[ii + 1] * 3;
+				var vi3 = Indices[ii + 2] * 3;
+
+				vec3.set(v1, Vertices[vi1], Vertices[vi1 + 1], Vertices[vi1 + 2]);
+				vec3.set(v2, Vertices[vi2], Vertices[vi2 + 1], Vertices[vi2 + 2]);
+				vec3.set(v3, Vertices[vi3], Vertices[vi3 + 1], Vertices[vi3 + 2]);
+
+				vec3.subtract(vec1, v1, v2);
+				vec3.subtract(vec2, v1, v3);
+
+				vec3.cross(crossP, vec1, vec2);
+				vec3.normalize(crossP, crossP);
+
+				NormalsFace.push(crossP[0]);
+				NormalsFace.push(crossP[1]);
+				NormalsFace.push(crossP[2]);
+
+				NormalsVertexSum[vi1 / 3][0] += crossP[0];
+				NormalsVertexSum[vi1 / 3][1] += crossP[1];
+				NormalsVertexSum[vi1 / 3][2] += crossP[2];
+
+				NormalsVertexSum[vi2 / 3][0] += crossP[0];
+				NormalsVertexSum[vi2 / 3][1] += crossP[1];
+				NormalsVertexSum[vi2 / 3][2] += crossP[2];
+
+				NormalsVertexSum[vi3 / 3][0] += crossP[0];
+				NormalsVertexSum[vi3 / 3][1] += crossP[1];
+				NormalsVertexSum[vi3 / 3][2] += crossP[2];
+			}
+
+			// Vertex Normals
+			for(var i = 0; i < Vertices.length; i += 3)
+			{
+				NormalsVertices.push(Vertices[i + 0]);
+				NormalsVertices.push(Vertices[i + 1]);
+				NormalsVertices.push(Vertices[i + 2]);
+
+				vec3.normalize(vec1, NormalsVertexSum[i / 3]);
+
+				NormalsVertices.push(vec1[0]);
+				NormalsVertices.push(vec1[1]);
+				NormalsVertices.push(vec1[2]);
+			}
+		}
+
+		var NewMesh = new Mesh();
+		NewMesh.vertices = NormalsVertices;
+		NewMesh.indices = Indices;
+		NewMesh.faceNormals = NormalsFace;
+		NewMesh.makeBuffers();
+
+		MeshLoaded.push(NewMesh);
+
+		loadObjFromVerts(Name, NewMesh, [0.55, 0.55, 0.55, 1], RenderMode.Phong, false);
 	};
 	
 	reader.readAsText(fileStream);
+}
+
+function isPowerOf2(value) 
+{
+  return (value & (value - 1)) == 0;
+}
+
+function isString (value) 
+{
+	return typeof value === 'string' || value instanceof String;
 }

@@ -1,6 +1,3 @@
-var modeLight = true;
-var sidebarHome = false;
-
 var canvasInit = false;
 
 window.onload = function()
@@ -49,14 +46,18 @@ function SelectFile(files)
 {
 	console.log("File: " + files[0].name);
 	fileToLoad = files[0];
+
+	/*https://stackoverflow.com/questions/24817347/how-do-you-convert-a-local-uri-to-path/24844838#24844838
+	const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
+	Cu.import("resource://gre/modules/NetUtil.jsm");
+
+	var aFileURL = 'file:///C:/path-to-local-file/root.png';
+	var path = NetUtil.newURI(aFileURL).QueryInterface(Ci.nsIFileURL).file.path;*/
 }
 
 function LoadSelectFile()
 {
-	//console.log("Loading: " + fileToLoad.name);
-	
-	//fileToLoad.text().then(text => console.log(text) /* Send Obj Data */ );
-	loadObj(fileToLoad);
+	loadObj(fileToLoad, fileToLoad.name);
 }
 
 function togglePause()

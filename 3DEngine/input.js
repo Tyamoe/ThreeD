@@ -33,7 +33,7 @@ function handleKeys(event)
     return;
   }
 
-  var testj = getObjByName("triangle.obj");
+  var testj = getObjByName("bunny.obj");
   var testj2 = getObjByName("sphere1");
 
   //console.log(testj);

@@ -226,7 +226,10 @@ function loadObj(fileStream, Name)
 		var posted = false;
 		var zero = vec3.create();
 		vec3.set(zero, 0, 0, 0);
+		
+		var MaxDis = 0.0;
 		var hasNormals = false;
+		
 		var lines = this.result.split('\n');
 		for(var i = 0; i < lines.length; i++)
 		{
@@ -237,9 +240,15 @@ function loadObj(fileStream, Name)
 				
 				if(lineType == "v")
 				{
-					Vertices.push(parseFloat(line[1]));
-					Vertices.push(parseFloat(line[2]));
-					Vertices.push(parseFloat(line[3]));
+					var vvv = vec3.create();
+					vec3.set(vvv, parseFloat(line[1]), parseFloat(line[2]), parseFloat(line[3]));
+					var dis = vec3.distance(vvv, zero);
+					
+					MaxDis = (dis > MaxDis) ? dis : MaxDis;
+					
+					Vertices.push(vvv[0]);
+					Vertices.push(vvv[1]);
+					Vertices.push(vvv[2]);
 
 					NormalsVertexSum.push(vec3.set(vec3.create(), 0, 0, 0));
 				}
@@ -322,9 +331,20 @@ function loadObj(fileStream, Name)
 			// Vertex Normals
 			for(var i = 0; i < Vertices.length; i += 3)
 			{
-				NormalsVertices.push(Vertices[i + 0]);
-				NormalsVertices.push(Vertices[i + 1]);
-				NormalsVertices.push(Vertices[i + 2]);
+				/*
+				T mapToRange(T val, Q r1s, Q r1e, Q r2s, Q r2e)
+				{
+					return (val - r1s) / (r1e - r1s) * (r2e - r2s) + r2s;
+				}
+				*/
+				
+				var oldLow = 0.0;
+				var oldHigh = MaxDis;
+				var newLow = -1.0;
+				var newHigh = 1.0;
+				NormalsVertices.push( ( (Vertices[i + 0] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
+				NormalsVertices.push( ( (Vertices[i + 1] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
+				NormalsVertices.push( ( (Vertices[i + 2] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
 
 				vec3.normalize(vec1, NormalsVertexSum[i / 3]);
 

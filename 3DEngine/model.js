@@ -14,12 +14,12 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 		{
 		    blob = xhr.response;
 		    loadObj(blob, name1);
+	
+			return;
 		}
 		xhr.send();
-
 		return;
 	}
-
 	ObjList.push(new Obj(name1, mesh));
 
 	ObjList[ObjCount].transform = new Transform();
@@ -90,7 +90,7 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 
 	ObjCount++;
 
-	return ObjList[ObjCount];
+	return ObjList[ObjCount - 1];
 }
 
 function loadTexture(gl, url) 
@@ -223,7 +223,7 @@ function loadObj(fileStream, Name)
 		var Indices = [];
 
 		var NormalsVertexSum = [];
-		
+		var posted = false;
 		var zero = vec3.create();
 		vec3.set(zero, 0, 0, 0);
 		var hasNormals = false;
@@ -248,6 +248,22 @@ function loadObj(fileStream, Name)
 					Indices.push(parseInt(line[1]) - 1);
 					Indices.push(parseInt(line[2]) - 1);
 					Indices.push(parseInt(line[3]) - 1);
+					
+					if(line.length > 4 && line[4] != "") 
+					{
+						/*if(!posted)
+						{
+							posted = true;
+							console.log(Name + "*4: " + line.length);
+							console.log(line);
+						}*/
+						for(var j = 4; j < line.length; j++)
+						{
+							Indices.push(parseInt(line[1]) - 1);
+							Indices.push(parseInt(line[j - 1]) - 1);
+							Indices.push(parseInt(line[j]) - 1);
+						}
+					}
 				}
 				else if(lineType == "n")
 				{
@@ -266,7 +282,8 @@ function loadObj(fileStream, Name)
 			var vec2 = vec3.create();
 
 			var crossP = vec3.create();
-
+			
+			console.log("Ind: " + Indices.length + " | NVS: " + NormalsVertexSum.length);
 			// Face Normals
 			for(var i = 0; i < (Indices.length / 3); i++)
 			{
@@ -325,7 +342,7 @@ function loadObj(fileStream, Name)
 
 		MeshLoaded.push(NewMesh);
 
-		loadObjFromVerts(Name, NewMesh, [0.55, 0.55, 0.55, 1], RenderMode.Phong, false);
+		return loadObjFromVerts(Name, NewMesh, [0.55, 0.55, 0.55, 1], RenderMode.Phong, false);
 	};
 	
 	reader.readAsText(fileStream);

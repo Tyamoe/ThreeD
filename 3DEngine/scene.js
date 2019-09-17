@@ -11,12 +11,12 @@ function makeScene()
 	loadObjFromVerts("sphere1", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("sphere2", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("sphere3", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
-	loadObjFromVerts("sphere4", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
-	loadObjFromVerts("sphere5", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
-
-	//loadObjFromVerts("Bunny", "https://tyamoe.com/scripts/models/bunny.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	var sphere = loadObjFromVerts("sphere4", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	//loadObjFromVerts("sphere5", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 
 	loadObjFromVerts("Skybox", MeshBox, ["dark_px.jpg", "dark_nx.jpg", "dark_py.jpg", "dark_ny.jpg", "dark_pz.jpg", "dark_nz.jpg"], RenderMode.Skybox, false);
+	
+	var bunny = loadObjFromVerts("Bunny", "https://tyamoe.com/scripts/models/bunny.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, false);
 	
 	// Start Update Function
 	tick();

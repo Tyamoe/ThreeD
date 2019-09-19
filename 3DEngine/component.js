@@ -48,6 +48,7 @@ var Clock = function()
 	this.lastTime = 0;
 	this.elapsedTime = 0;
 	this.time = 0;
+	this.timeNow = 0;
 
 	this.tick = 0;
 }

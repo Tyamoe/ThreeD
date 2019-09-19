@@ -8,16 +8,20 @@ function makeScene()
 	// Load Objects
 	//loadObjFromVerts("krunk", MeshBox, ["block.png"], RenderMode.Texture, true);
 
-	loadObjFromVerts("sphere1", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
-	loadObjFromVerts("sphere2", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
-	loadObjFromVerts("sphere3", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
-	var sphere = loadObjFromVerts("sphere4", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
-	loadObjFromVerts("sphere5", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	//loadObjFromVerts("sphere1", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	//loadObjFromVerts("sphere2", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	//loadObjFromVerts("sphere3", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	//var sphere = loadObjFromVerts("sphere4", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	//loadObjFromVerts("sphere5", MeshBox, ["block.png"], RenderMode.Texture, true);
 
 	loadObjFromVerts("Skybox", MeshBox, ["dark_px.jpg", "dark_nx.jpg", "dark_py.jpg", "dark_ny.jpg", "dark_pz.jpg", "dark_nz.jpg"], RenderMode.Skybox, false);
 	
-	//var bunny = loadObjFromVerts("bunny.obj", "https://tyamoe.com/scripts/models/bunny.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, false);
+	loadObjFromVerts("bunny.obj", "https://tyamoe.com/scripts/models/bunny.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	loadObjFromVerts("sphere.obj", "https://tyamoe.com/scripts/models/sphere.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	loadObjFromVerts("rhino.obj", "https://tyamoe.com/scripts/models/rhino.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	loadObjFromVerts("cube.obj", "https://tyamoe.com/scripts/models/cube2.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	loadObjFromVerts("cup.obj", "https://tyamoe.com/scripts/models/cup.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	
 	// Start Update Function
-	tick();
+	//tick();
 }

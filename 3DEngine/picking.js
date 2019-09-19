@@ -80,6 +80,8 @@ function Pick(x, y, mode1)
 
         if(pickID < ObjCount)
         {
+            console.log(pickID + "| pickID < ObjCount |" + ObjCount);
+            console.log(ObjList[pickID].name + "| Animate |" + ObjList[pickID].animate);
             var newPos = vec3.create();
             var newFront = vec3.create();
 

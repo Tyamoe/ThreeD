@@ -5,6 +5,7 @@ var RenderMode =
   Skybox: 3,
 };
 
+var ObjectsLoaded = 0;
 var PV = mat4.create();
 
 //Animation
@@ -27,7 +28,7 @@ function tick()
 {
     requestAnimFrame(tick);
     
-    if(canvasInit)
+    if(canvasInit && ObjectsLoaded == ObjCount)
     {
         var now = Date.now();
         dt = (now - lastUpdate) / 1000;
@@ -46,6 +47,10 @@ function tick()
         }
 
         animate();
+    }
+    else 
+    {
+        console.log(ObjectsLoaded + "} ObjectsLoaded == ObjCount }" + ObjCount)
     }
 }
 
@@ -125,9 +130,11 @@ function DrawObjects()
 
 function animate() 
 {
-    for(var i = 0; i < ObjCount; i++)
+    var ThisIsI = 0;
+
+    ObjList.forEach(function(element) 
     {
-        var obj = ObjList[i];
+        var obj = element;
 
         if(obj.animate == false) return;
 
@@ -145,8 +152,8 @@ function animate()
         {
             if(!obj.skybox && obj.inFocus == Focus.OFF && !Paused)
             {
-                abc[i] += 0.5;
-                var theta = (degToRad(abc[i]));
+                abc[ThisIsI] += 0.5;
+                var theta = (degToRad(abc[ThisIsI]));
 
                 var x = 6 * Math.sin(theta);
                 var z = 6 * Math.cos(theta);
@@ -163,7 +170,7 @@ function animate()
             }
             else if(obj.inFocus == Focus.TRANSIT_TO && !Paused)
             {
-                abc[i] += 0.5;  //Update Orbit Rotation
+                abc[ThisIsI] += 0.5;  //Update Orbit Rotation
 
                 obj.clock.tick += dt;
                 obj.transform.oldPosY += 1 * obj.transform.lerp;
@@ -205,17 +212,10 @@ function animate()
                 obj.clock.tick += 1;
                 if(obj.clock.tick % 40 == 0)
                 {
-                    //if(modeLight)
-                    {
-                        obj.texture = obj.textureArray[0];
-                    }
-                    //else
-                    {
-                        obj.texture = obj.textureArray[0];
-                    }
+                    obj.texture = obj.textureArray[0];
                 }
 
-                abc[i] += 0.5;  //Update Orbit Rotation
+                abc[ThisIsI] += 0.5;  //Update Orbit Rotation
 
                 var ticks = Math.floor((1.0 / dt));
 
@@ -228,7 +228,7 @@ function animate()
                     }
                 }
 
-                var orbit = abc[i] + Math.floor((ticks / 2));
+                var orbit = abc[ThisIsI] + Math.floor((ticks / 2));
 
                 var theta = (degToRad(orbit));
 
@@ -256,7 +256,7 @@ function animate()
                     }
                 }
 
-                var orbit = abc[i];
+                var orbit = abc[ThisIsI];
 
                 var theta = (degToRad(orbit));
 
@@ -269,7 +269,7 @@ function animate()
             }
             else if(obj.inFocus == Focus.TRANSIT_FROM && !Paused)
             {
-                abc[i] += 0.5;  //Update Orbit Rotation
+                abc[ThisIsI] += 0.5;  //Update Orbit Rotation
 
                 obj.clock.tick += dt;
                 vec3.scaleAndAdd(obj.transform.pos, obj.transform.pos, obj.transform.vel, dt);
@@ -322,6 +322,214 @@ function animate()
                     Rendering = false;
                 }
             }
+        }
+        else
+        {
+            //console.log(" hi");
+            //console.log(ObjList);
+        }
+        obj.clock.lastTime = obj.clock.timeNow;
+
+        ThisIsI++
+    });
+
+    for(var u = 0; u < 0; u++)
+    {
+        var obj = ObjList[u];
+
+        if(obj.animate == false) return;
+
+        obj.clock.timeNow = new Date().getTime();
+        obj.clock.elapsed = obj.clock.timeNow - obj.clock.lastTime;
+
+        if (!obj.clock.time) 
+        {
+            obj.clock.time = 0.0;
+        }
+
+        obj.clock.time += obj.clock.elapsed / 1000.0;
+
+        if (obj.clock.lastTime !== 0) 
+        {
+            //console.log("obj " + obj.name);
+            if(!obj.skybox && obj.inFocus == Focus.OFF && !Paused)
+            {
+                abc[u] += 0.5;
+                var theta = (degToRad(abc[u]));
+
+                var x = 6 * Math.sin(theta);
+                var z = 6 * Math.cos(theta);
+
+                obj.transform.pos[0] = x;
+                obj.transform.pos[1] += dt * obj.transform.lerp;
+                if(obj.transform.pos[1] >= 1 || obj.transform.pos[1] <= 0)
+                {
+                    obj.transform.lerp *= -1;
+                }
+                obj.transform.pos[2] = z;
+
+                obj.transform.oldPosY = obj.transform.pos[1];
+            }
+            else if(obj.inFocus == Focus.TRANSIT_TO && !Paused)
+            {
+                console.log(obj,name + "| TRANSIT_TO |" + obj.transform.vel + " @ " + dt);
+                abc[u] += 0.5;  //Update Orbit Rotation
+
+                obj.clock.tick += dt;
+                obj.transform.oldPosY += 1 * obj.transform.lerp;
+                if(obj.transform.oldPosY >= 1 || obj.transform.oldPosY <= 0)
+                {
+                    obj.transform.lerp *= -1;
+                }
+
+                vec3.scaleAndAdd(obj.transform.pos, obj.transform.pos, obj.transform.vel, dt);
+                
+                camera.Front[1] = (camera.Front[1] < 0) ? camera.Front[1] + dt : 0;
+
+                if(vec3.distance(obj.transform.pos, obj.transform.destination) <= 0.1 || obj.clock.tick >= 0.99)//if(vec3.equals(obj.transform.pos, obj.transform.destination))
+                {
+                    obj.clock.tick = 0;
+                    camera.Front[1] = 0;
+                    obj.inFocus = Focus.ON;
+                }
+            }
+            else if(obj.inFocus == Focus.TRANSIT_TO && Paused)
+            {
+                Rendering = true;
+
+                obj.clock.tick += dt;
+
+                vec3.scaleAndAdd(obj.transform.pos, obj.transform.pos, obj.transform.vel, dt);
+                
+                camera.Front[1] = (camera.Front[1] < 0) ? camera.Front[1] + dt : 0;
+
+                if(vec3.distance(obj.transform.pos, obj.transform.destination) <= 0.1 || obj.clock.tick >= 0.99)//if(vec3.equals(obj.transform.pos, obj.transform.destination))
+                {
+                    obj.clock.tick = 0;
+                    camera.Front[1] = 0;
+                    obj.inFocus = Focus.ON;
+                }
+            }
+            else if(obj.inFocus == Focus.ON && !Paused)
+            {
+                obj.clock.tick += 1;
+                if(obj.clock.tick % 40 == 0)
+                {
+                    obj.texture = obj.textureArray[0];
+                }
+
+                abc[u] += 0.5;  //Update Orbit Rotation
+
+                var ticks = Math.floor((1.0 / dt));
+
+                for(var j = 0; j < ticks; j++)
+                {
+                    obj.transform.oldPosY += 1 * obj.transform.lerp;
+                    if(obj.transform.oldPosY >= 1 || obj.transform.oldPosY <= 0)
+                    {
+                        obj.transform.lerp *= -1;
+                    }
+                }
+
+                var orbit = abc[u] + Math.floor((ticks / 2));
+
+                var theta = (degToRad(orbit));
+
+                var x = 6 * Math.sin(theta);
+                var y = obj.transform.oldPosY;
+                var z = 6 * Math.cos(theta);
+
+                vec3.set(obj.transform.destination, x, y, z);
+                vec3.subtract(obj.transform.vel, obj.transform.destination, obj.transform.pos);
+            }
+            else if(obj.inFocus == Focus.ON && Paused)
+            {
+                obj.clock.tick += 1;
+
+                if(obj.clock.tick % 40 == 0)
+                {
+                    if(obj.texture != obj.textureArray[0])
+                    {
+                        obj.texture = obj.textureArray[0];
+                        Rendering = true;
+                    }
+                    else
+                    {
+                        Rendering = false;
+                    }
+                }
+
+                var orbit = abc[u];
+
+                var theta = (degToRad(orbit));
+
+                var x = 6 * Math.sin(theta);
+                var y = 0;
+                var z = 6 * Math.cos(theta);
+
+                vec3.set(obj.transform.destination, x, y, z);
+                vec3.subtract(obj.transform.vel, obj.transform.destination, obj.transform.pos);
+            }
+            else if(obj.inFocus == Focus.TRANSIT_FROM && !Paused)
+            {
+                abc[u] += 0.5;  //Update Orbit Rotation
+
+                obj.clock.tick += dt;
+                vec3.scaleAndAdd(obj.transform.pos, obj.transform.pos, obj.transform.vel, dt);
+
+                camera.Front[1] = (camera.Front[1] > -1) ? camera.Front[1] - dt : -1;
+
+                if(vec3.distance(obj.transform.pos, obj.transform.destination) <= 0.1 || obj.clock.tick >= 0.99)//if(vec3.equals(obj.transform.pos, obj.transform.destination))
+                {
+                    obj.clock.tick = 0;
+                    camera.Front[1] = -1;
+
+                    obj.inFocus = Focus.OFF;
+
+                    ObjInFocus = -1;
+
+                    mode = Mode.ORBIT;
+
+                    //Check for glitched Y coord
+                    if(obj.transform.pos[1] < 0)
+                    {
+                        obj.transform.pos[1] = 0.5;
+                    }
+                }
+            }
+            else if(obj.inFocus == Focus.TRANSIT_FROM && Paused)
+            {
+                Rendering = true;
+
+                obj.clock.tick += dt;
+                vec3.scaleAndAdd(obj.transform.pos, obj.transform.pos, obj.transform.vel, dt);
+
+                camera.Front[1] = (camera.Front[1] > -1) ? camera.Front[1] - dt : -1;
+
+                if(vec3.distance(obj.transform.pos, obj.transform.destination) <= 0.1 || obj.clock.tick >= 0.99)//if(vec3.equals(obj.transform.pos, obj.transform.destination))
+                {
+                    obj.clock.tick = 0;
+                    camera.Front[1] = -1;
+
+                    obj.inFocus = Focus.OFF;
+
+                    ObjInFocus = -1;
+
+                    mode = Mode.ORBIT;
+
+                    //Check for glitched Y coord
+                    if(obj.transform.pos[1] < 0)
+                    {
+                        obj.transform.pos[1] = 0.0;
+                    }
+                    Rendering = false;
+                }
+            }
+        }
+        else
+        {
+            //console.log(" hi");
+            //console.log(ObjList);
         }
         obj.clock.lastTime = obj.clock.timeNow;
     }

@@ -4,6 +4,7 @@ var cubePath = "https://tyamoe.com/scripts/models/cube/";
 
 function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 {	
+	ObjectsLoaded++;
 	if(isString(mesh))
 	{	
 		var blob = null;
@@ -13,13 +14,17 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 		xhr.onload = function() 
 		{
 		    blob = xhr.response;
-		    loadObj(blob, name1);
-	
+		    loadObj(blob, name1, Shading, renderMode, Animate);
+			
+		ObjectsLoaded--;
+			// Start Update Function
+			//tick();
 			return;
 		}
 		xhr.send();
 		return;
 	}
+
 	ObjList.push(new Obj(name1, mesh));
 
 	ObjList[ObjCount].transform = new Transform();
@@ -210,7 +215,7 @@ function loadCubeMap(gl, imgAry)
 	return texID;
 }
 
-function loadObj(fileStream, Name)
+function loadObj(fileStream, Name, Shading, renderMode, Animate)
 {
 	console.log("Loading: " + fileStream.name);
 	var reader = new FileReader();
@@ -228,6 +233,8 @@ function loadObj(fileStream, Name)
 		vec3.set(zero, 0, 0, 0);
 		
 		var MaxDis = 0.0;
+		var MaxMag = 0.0;
+
 		var hasNormals = false;
 		
 		var lines = this.result.split('\n');
@@ -244,7 +251,11 @@ function loadObj(fileStream, Name)
 					vec3.set(vvv, parseFloat(line[1]), parseFloat(line[2]), parseFloat(line[3]));
 					var dis = vec3.distance(vvv, zero);
 					
-					MaxDis = (dis > MaxDis) ? dis : MaxDis;
+					if(dis > MaxDis)
+					{
+						MaxDis =  dis;
+						MaxMag = vec3.length(vvv);
+					}
 					
 					Vertices.push(vvv[0]);
 					Vertices.push(vvv[1]);
@@ -253,7 +264,14 @@ function loadObj(fileStream, Name)
 					NormalsVertexSum.push(vec3.set(vec3.create(), 0, 0, 0));
 				}
 				else if(lineType == "f")
-				{
+				{	
+					if(line[1].includes("/"))
+					{
+						for(var j = 1; j < line.length; j++)
+						{
+							line[j] = line[j].substring(0, line[j].search("/"));
+						}
+					}
 					Indices.push(parseInt(line[1]) - 1);
 					Indices.push(parseInt(line[2]) - 1);
 					Indices.push(parseInt(line[3]) - 1);
@@ -273,10 +291,6 @@ function loadObj(fileStream, Name)
 							Indices.push(parseInt(line[j]) - 1);
 						}
 					}
-				}
-				else if(lineType == "n")
-				{
-					hasNormals = true;
 				}
 			}
 		}
@@ -328,6 +342,8 @@ function loadObj(fileStream, Name)
 				NormalsVertexSum[vi3 / 3][2] += crossP[2];
 			}
 
+			console.log("MaxMag: " + MaxMag + " | MaxDis: " + MaxDis);
+
 			// Vertex Normals
 			for(var i = 0; i < Vertices.length; i += 3)
 			{
@@ -339,9 +355,12 @@ function loadObj(fileStream, Name)
 				*/
 				
 				var oldLow = 0.0;
-				var oldHigh = MaxDis;
+				var oldHigh = MaxMag;
 				var newLow = -1.0;
 				var newHigh = 1.0;
+				//NormalsVertices.push(Vertices[i + 0]);
+				//NormalsVertices.push(Vertices[i + 1]);
+				//NormalsVertices.push(Vertices[i + 2]);
 				NormalsVertices.push( ( (Vertices[i + 0] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
 				NormalsVertices.push( ( (Vertices[i + 1] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
 				NormalsVertices.push( ( (Vertices[i + 2] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
@@ -362,7 +381,7 @@ function loadObj(fileStream, Name)
 
 		MeshLoaded.push(NewMesh);
 
-		return loadObjFromVerts(Name, NewMesh, [0.55, 0.55, 0.55, 1], RenderMode.Phong, false);
+		return loadObjFromVerts(Name, NewMesh, Shading, renderMode, Animate);
 	};
 	
 	reader.readAsText(fileStream);

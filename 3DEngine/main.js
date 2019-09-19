@@ -104,4 +104,7 @@ function InitWebGL()
 	makeMeshes();
 
 	makeScene();
+
+	// Start Update Function
+	tick();
 }

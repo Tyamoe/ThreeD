@@ -42,6 +42,7 @@ function handleKeys(event)
 
   if(event.keyCode == 187 && !firefox)
   {//Add
+    console.log(testj);
     updateScale(testj, 0.5, 0.5, 0.5);
   }
   if(event.keyCode == 189 && !firefox)

@@ -89,7 +89,7 @@ function DrawObjects()
             shaderPhong.setUniforms(obj);
             shaderPhong.applyAttribute(obj);
 
-            gl.drawElements(gl.TRIANGLES, obj.mesh.indices.length, gl.UNSIGNED_SHORT, 0);
+            gl.drawElements(gl.TRIANGLES, obj.mesh.indices.length, gl.UNSIGNED_INT, 0);
         }
         else if(obj.renderMode == RenderMode.Texture)
         {
@@ -101,7 +101,7 @@ function DrawObjects()
             gl.bindTexture(gl.TEXTURE_2D, obj.texture);
             gl.activeTexture(gl.TEXTURE0);
 
-            gl.drawElements(gl.TRIANGLES, obj.mesh.indices.length, gl.UNSIGNED_SHORT, 0);
+            gl.drawElements(gl.TRIANGLES, obj.mesh.indices.length, gl.UNSIGNED_INT, 0);
         }
         else
         {
@@ -119,7 +119,7 @@ function DrawObjects()
             gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_CUBE_MAP, obj.texture);
 
-            gl.drawElements(gl.TRIANGLES, obj.mesh.indices.length, gl.UNSIGNED_SHORT, 0);
+            gl.drawElements(gl.TRIANGLES, obj.mesh.indices.length, gl.UNSIGNED_INT, 0);
 
             gl.enable(gl.CULL_FACE);
             

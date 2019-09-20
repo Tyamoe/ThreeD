@@ -1,5 +1,6 @@
-var Mesh = function()
+var Mesh = function(Name)
 {
+	this.name = Name;
 	this.vertices = [];
 	this.indices = [];
 	
@@ -16,7 +17,7 @@ var Mesh = function()
 
 		this.IndexBufferObject = gl.createBuffer();
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.IndexBufferObject);
-		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(this.indices), gl.STATIC_DRAW);
 	}
 }
 

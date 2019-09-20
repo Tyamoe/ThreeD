@@ -14,9 +14,10 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 		xhr.onload = function() 
 		{
 		    blob = xhr.response;
+		    blob.name = mesh;
 		    loadObj(blob, name1, Shading, renderMode, Animate);
 			
-		ObjectsLoaded--;
+			ObjectsLoaded--;
 			// Start Update Function
 			//tick();
 			return;
@@ -217,6 +218,12 @@ function loadCubeMap(gl, imgAry)
 
 function loadObj(fileStream, Name, Shading, renderMode, Animate)
 {
+	var meshLoaded = IsMeshLoaded(fileStream.name);
+	if(meshLoaded != false)
+	{
+		console.log("Already Loaded: " + meshLoaded.name);
+		return loadObjFromVerts(Name, meshLoaded, Shading, renderMode, Animate);
+	}
 	console.log("Loading: " + fileStream.name);
 	var reader = new FileReader();
 	
@@ -347,13 +354,6 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 			// Vertex Normals
 			for(var i = 0; i < Vertices.length; i += 3)
 			{
-				/*
-				T mapToRange(T val, Q r1s, Q r1e, Q r2s, Q r2e)
-				{
-					return (val - r1s) / (r1e - r1s) * (r2e - r2s) + r2s;
-				}
-				*/
-				
 				var oldLow = 0.0;
 				var oldHigh = MaxMag;
 				var newLow = -1.0;
@@ -373,7 +373,7 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 			}
 		}
 
-		var NewMesh = new Mesh();
+		var NewMesh = new Mesh(fileStream.name);
 		NewMesh.vertices = NormalsVertices;
 		NewMesh.indices = Indices;
 		NewMesh.faceNormals = NormalsFace;
@@ -392,7 +392,7 @@ function isPowerOf2(value)
   return (value & (value - 1)) == 0;
 }
 
-function isString (value) 
+function isString(value) 
 {
 	return typeof value === 'string' || value instanceof String;
 }

@@ -89,21 +89,35 @@ var MeshSphere = {};
 
 var MeshLoaded = [];
 
+function IsMeshLoaded(meshName)
+{
+	MeshLoaded.forEach(function(element)
+	{
+		console.log(element.name + " | element.name = meshName | " + meshName);
+		if(element.name.includes(meshName)) 
+		{
+			return element;
+		}
+	});
+
+	return false;
+}
+
 function makeMeshes()
 {
 	makeSphere();
 
-	MeshSquare = new Mesh();
+	MeshSquare = new Mesh("square");
 	MeshSquare.vertices = squareVertices;
 	MeshSquare.indices = squareIndices;
 	MeshSquare.makeBuffers();
 
-	MeshBox = new Mesh();
+	MeshBox = new Mesh("box");
 	MeshBox.vertices = boxVertices;
 	MeshBox.indices = boxIndices;
 	MeshBox.makeBuffers();
 
-	MeshSphere = new Mesh();
+	MeshSphere = new Mesh("sphere");
 	MeshSphere.vertices = SphereVertices;
 	MeshSphere.indices = SphereIndices;
 	MeshSphere.makeBuffers();

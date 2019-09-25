@@ -19,8 +19,13 @@ function makeScene()
 	loadObjFromVerts("bunny.obj", "https://tyamoe.com/scripts/models/bunny.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("sphere.obj", "https://tyamoe.com/scripts/models/sphere.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("rhino.obj", "https://tyamoe.com/scripts/models/rhino.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
-	loadObjFromVerts("lucy_princeton.obj", "https://tyamoe.com/scripts/models/lucy_princeton.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	loadObjFromVerts("quad.obj", "https://tyamoe.com/scripts/models/quad.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("cup.obj", "https://tyamoe.com/scripts/models/cup.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	loadObjFromVerts("cube2.obj", "https://tyamoe.com/scripts/models/cube2.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	loadObjFromVerts("starwars1.obj", "https://tyamoe.com/scripts/models/starwars1.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	loadObjFromVerts("4Sphere.obj", "https://tyamoe.com/scripts/models/4Sphere.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+
+	loadObjFromVerts("lucy_princeton.obj", "https://tyamoe.com/scripts/models/lucy_princeton.obj", new Float32Array([0.9, 0.45, 0.45, 1]), RenderMode.Phong, false);
 	
 	// Start Update Function
 	//tick();

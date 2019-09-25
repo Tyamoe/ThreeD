@@ -18,8 +18,6 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 		    loadObj(blob, name1, Shading, renderMode, Animate);
 			
 			ObjectsLoaded--;
-			// Start Update Function
-			//tick();
 			return;
 		}
 		xhr.send();
@@ -29,10 +27,7 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 	ObjList.push(new Obj(name1, mesh));
 
 	ObjList[ObjCount].transform = new Transform();
-	ObjList[ObjCount].clock = new Clock();
-
 	ObjList[ObjCount].renderMode = renderMode;
-	ObjList[ObjCount].animate = Animate;
 
 	if(renderMode == RenderMode.Skybox)
 	{
@@ -59,7 +54,21 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 
 		if(Animate)
 		{
-			var theta = (degToRad(abc[ObjCount]));
+			var currObj = 0;
+
+			var iterator1 = abc[Symbol.iterator]();
+
+			for (let item of iterator1) 
+			{
+				if(item[1] == false)
+				{
+					currObj = item[0];
+					abc.set(item[0], true);
+					break;
+				}
+			}
+
+			var theta = (degToRad(currObj));
 
 			var x = 6 * Math.sin(theta);
 			var z = 6 * Math.cos(theta);
@@ -80,13 +89,32 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 
 		if(Animate)
 		{
-			var theta = (degToRad(abc[ObjCount]));
+			var currObj = 0;
+
+			var iterator1 = abc[Symbol.iterator]();
+
+			for (let item of iterator1) 
+			{
+				if(item[1] == false)
+				{
+					currObj = item[0];
+					abc.set(item[0], true);
+					break;
+				}
+			}
+
+			var theta = (degToRad(currObj));
 
 			var x = 6 * Math.sin(theta);
 			var z = 6 * Math.cos(theta);
 
 			ObjList[ObjCount].transform.pos[0] = x;
 			ObjList[ObjCount].transform.pos[2] = z;
+		}
+		else
+		{
+			updateScale(ObjList[ObjCount], 9, 9, 9);
+			updateTransform(ObjList[ObjCount], 5, -2, 0);
 		}
 	}
 
@@ -313,7 +341,7 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 
 			var crossP = vec3.create();
 			
-			console.log("Ind: " + Indices.length + " | NVS: " + NormalsVertexSum.length);
+			//console.log("Ind: " + Indices.length + " | NVS: " + NormalsVertexSum.length);
 			// Face Normals
 			for(var i = 0; i < (Indices.length / 3); i++)
 			{
@@ -349,7 +377,7 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 				NormalsVertexSum[vi3 / 3][2] += crossP[2];
 			}
 
-			console.log("MaxMag: " + MaxMag + " | MaxDis: " + MaxDis);
+			//console.log("MaxMag: " + MaxMag + " | MaxDis: " + MaxDis);
 
 			// Vertex Normals
 			for(var i = 0; i < Vertices.length; i += 3)

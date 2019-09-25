@@ -26,8 +26,6 @@ function handleKeys(event)
     return;
   }
   
-  //console.log("IDJijjd");
-  
   if(!canvasInFocus)
   {
     return;
@@ -49,7 +47,6 @@ function handleKeys(event)
   {//Sub
     updateScale(testj, -0.5, -0.5, -0.5);
   }
-
   if(event.keyCode == 61 && firefox)
   {//Add
     updateScale(testj, 0.5, 0.5, 0.5);
@@ -214,8 +211,6 @@ function handleKeys(event)
     console.log("Camera Front: x-" + camera.Front[0] + " y-" + camera.Front[1] + " z-" + camera.Front[2]);
     console.log("Camera Up: x-" + camera.Up[0] + " y-" + camera.Up[1] + " z-" + camera.Up[2]);
   }
-
-	//event.preventDefault();
 }
 
 var hcount = 0;
@@ -228,12 +223,6 @@ function handleHover(event)
   {
     return;
   }
-
- /* hcount++;
-  if(hcount % 2 != 0)
-  {
-    return;
-  }*/
 
   var x = event.clientX;
   var y = event.clientY;
@@ -256,59 +245,6 @@ function handleHover(event)
   {
     canvasInFocus = false;
   }
-
-	/*var rect = canvas.getBoundingClientRect();
-  var x = event.clientX - rect.left;
-  var y = event.clientY - rect.top;
-
-  if(mouse.firstMouse)
-  {
-  	mouse.lastX = x;
-  	mouse.lastY = y;
-
-  	mouse.firstMouse = false;
-  }
-
-  var xoffset = x - mouse.lastX;
-	var yoffset = mouse.lastY - y; // Reversed since y-coordinates go from bottom to left
-	
-	mouse.lastX = x;
-	mouse.lastY = y;
-
-	xoffset *= mouse.sensitivity;
-	yoffset *= mouse.sensitivity;
-
-	mouse.yaw += xoffset;
-	mouse.pitch += yoffset;
-
-	// Make sure that when pitch is out of bounds, screen doesn't get flipped
-	if (mouse.pitch > 89.0)
-	{
-		mouse.pitch = 89.0;
-	}
-	if (mouse.pitch < -89.0)
-	{
-		mouse.pitch = -89.0;
-	}
-
-	var xx = Math.cos(degToRad(mouse.yaw)) * Math.cos(degToRad(mouse.pitch));
-
-	var yy = Math.sin(degToRad(mouse.pitch));
-
-	var zz = Math.sin(degToRad(mouse.yaw)) * Math.cos(degToRad(mouse.pitch));
-
-	var temp = vec3.fromValues(xx, yy, zz);
-
-	vec3.normalize(camera.Front, temp);
-
-  if(InBounds(x, y))
-  {
-  	//In
-  }
-  else
-  {
-  	//Out
-  }*/
 }
 
 function handleClick(event)
@@ -327,41 +263,8 @@ function handleClick(event)
   {
     x = x - rect.left;
     y = rect.bottom - y;
-    Pick(x, y, true);
-  }
-        /*
-  event.preventDefault();     
-	var rect = canvas.getBoundingClientRect();
-  var x = event.clientX - rect.left;
-  var y = event.clientY - rect.top;   
-
-  var x_pos = (event.clientX / window.innerWidth) * 2 - 1;
-  var y_pos = -(event.clientY / window.innerHeight) * 2 + 1;
-  var z_pos = 0.5;
-
-  if(InBounds(x, y))
-  {
-
     Pick(x, y);
-
-    //translate the position to world space
-    var pos = vec3.create();
-    vec3.set(pos, 1, 1, 1);
-
-    var combine = mat4.create();
-
-    var proj = mat4.create();
-
-    mat4.perspective(proj, 45 * Math.PI / 180.0, canvas.width / canvas.height, 0.01, 1000.0);
-        
-    vec3.transformMat4(pos, pos, proj);
-
-    console.log(x + " " + y + "click: " + pos);
   }
-  else
-  {
-  	//translateY = translateY - 1;
-  }*/
 }
 
 function InBounds(x, y)

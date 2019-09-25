@@ -1,8 +1,19 @@
 var ObjCount = 0;
 var ObjList = [];
 
-var abc = [0, 72, 144, 216, 288];
+//var abc = [0, 45, 90, 135, 180, 225, 270, 305];
 var cba = 0.5;
+
+var abc = new Map([
+	[0, false],
+	[45, false],
+	[90, false],
+	[135, false],
+	[180, false],
+	[225, false],
+	[270, false],
+	[305, false],
+]);
 
 var Mouse = function() 
 { 
@@ -43,24 +54,19 @@ var Model = function(Name, Mesh, Color)
 var Obj = function(name, Mesh) 
 {
 	this.name = name;
-	this.inFocus = Focus.OFF;
+
+	this.transform = {};
+	this.mesh = Mesh;
 
 	this.renderMode = RenderMode.Phong;
+
 	this.shader = null;
 	this.pickShader = null;
 
 	this.skybox = false;
-	this.animate = false;
-
-	this.pickID;
 
 	this.shadingColor = [1.0, 1.0, 1.0, 1.0];
 	this.tint = [1.0, 1.0, 1.0, 1.0];
-
-	this.transform = {};
-	this.clock = {};
-
-	this.mesh = Mesh;
 
 	this.AttrLocPosition = -1;
 	this.AttrLocTexCoords = -1;

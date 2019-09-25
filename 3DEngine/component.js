@@ -6,17 +6,19 @@ var Mesh = function(Name)
 	
 	this.faceNormals = [];
 
-	this.VertexBufferObject = null;
-	this.IndexBufferObject = null;
+	this.VBO = null;
+	this.IBO = null;
+
+	this.VAO = null;
 
 	this.makeBuffers = function ()
 	{
-		this.VertexBufferObject = gl.createBuffer();
-		gl.bindBuffer(gl.ARRAY_BUFFER, this.VertexBufferObject);
+		this.VBO = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.VBO);
 		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW);
 
-		this.IndexBufferObject = gl.createBuffer();
-		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.IndexBufferObject);
+		this.IBO = gl.createBuffer();
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.IBO);
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(this.indices), gl.STATIC_DRAW);
 	}
 }
@@ -41,17 +43,6 @@ var Transform = function()
 	this.axis = [1, 0, 0];
 
 	this.lerp = 0.01;
-}
-
-var Clock = function()
-{
-	this.currTime = 0;
-	this.lastTime = 0;
-	this.elapsedTime = 0;
-	this.time = 0;
-	this.timeNow = 0;
-
-	this.tick = 0;
 }
 
 // Component Funcs

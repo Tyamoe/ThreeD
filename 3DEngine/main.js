@@ -1,30 +1,3 @@
-//WebGL
-var Focus = 
-{
-  OFF: 1,
-  TRANSIT_TO: 2,
-  TRANSIT_FROM: 3,
-  ON: 4,
-  PAUSE: 5,
-};
-
-var Mode = 
-{
-  ORBIT: 1,
-  FOCUS: 2,
-};
-
-var Pixel = 
-{
-  DOWNLOAD: 1,
-  EXIT: 2,
-  NEXT: 3,
-  PREVIOUS: 4,
-  LINK: 5,
-  INVALID: 6,
-  DOWNLOAD2: 7,
-};
-
 // WebGL context
 var gl;
 // the canvas element
@@ -38,8 +11,6 @@ var dt = 0.016;
 
 var Paused = false;
 var Rendering = true;
-
-var mode = Mode.ORBIT;
 
 var ObjInFocus = -1;
 
@@ -71,7 +42,7 @@ function InitWebGL()
 		if (rect.left <= x && x < rect.right && rect.top <= y && y < rect.bottom) 
 		{
 			x = x - rect.left, y = rect.bottom - y;
-			Pick(x, y, mode);
+			Pick(x, y);
 		}
  	}
 

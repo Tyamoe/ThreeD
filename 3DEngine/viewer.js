@@ -21,19 +21,7 @@ window.onload = function()
 
 	iLoad.appendChild(iLoading);
 
-	var PauseButton = document.createElement('div');
-	PauseButton.id = 'PauseButton';
-	PauseButton.setAttribute("style", "position:absolute; right:0.5%; top:0.5%; width:4vw; height:4vw; background-color: white;");
-	PauseButton.onclick = function () { togglePause(); };
-
-	var UnfocusButton = document.createElement('div');
-	UnfocusButton.id = 'UnfocusButton';
-	UnfocusButton.setAttribute("style", "position:absolute; right:5vw; top:0.5%; width:4vw; height:4vw; background-color: red;");
-	UnfocusButton.onclick = function () { UnfocusNode(); };
-
 	viewerDiv.appendChild(iCanvas);
-	viewerDiv.appendChild(PauseButton); 
-	viewerDiv.appendChild(UnfocusButton); 
 	viewerDiv.appendChild(iLoad); 
   
 	iCanvas.setAttribute("style", "width: 100%; height: 100%;");
@@ -69,6 +57,18 @@ function UnfocusNode()
 {
     ObjList[ObjInFocus].clock.tick = 0;
     ObjList[ObjInFocus].inFocus = Focus.TRANSIT_FROM;
+}
+
+function toggleCameraControl(checkbox)
+{
+	if(checkbox.checked)
+	{
+		ControlCamera = true;
+	}
+	else
+	{
+		ControlCamera = false;
+	}
 }
 
 function togglePause()

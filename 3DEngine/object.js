@@ -62,6 +62,7 @@ var Model = function(Name, Mesh, Color)
 var Obj = function(name, Mesh) 
 {
 	this.name = name;
+	this.draw = true;
 
 	this.transform = {};
 	this.mesh = Mesh;

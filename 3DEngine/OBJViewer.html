@@ -1,61 +1,30 @@
 <!DOCTYPE html>
 <html>
 
-<link href="css/desktop.css" rel="stylesheet" />
-
-<style>
-	/* Tooltip container */
-	.tooltip {
-	  position: relative;
-	  display: inline-block;
-	  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-	}
-
-	/* Tooltip text */
-	.tooltip .tooltiptext {
-	  visibility: hidden;
-	  width: 120px;
-	  background-color: black;
-	  color: #fff;
-	  text-align: center;
-	  padding: 5px 0;
-	  border-radius: 6px;
-	 
-	  /* Position the tooltip text - see examples below! */
-	  position: absolute;
-	  z-index: 1;
-	}
-
-	/* Show the tooltip text when you mouse over the tooltip container */
-	.tooltip:hover .tooltiptext {
-	  visibility: visible;
-	}
-</style>
+<link href="css/engine.css" rel="stylesheet" />
 
 <body>
-
-<div id="ViewerDiv" class="ViewerDiv" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;"></div>
-<div id="UIDiv" class="UIDiv" style="position: absolute; top: 0; right: 0; bottom: 0; left: 0; visibility: hidden;">
-	<div id="TogglePanel" style="position:absolute; right:47vw; bottom:0.5vh; width:12.7vw; height:4vw; background-color: grey; visibility: visible;">
-		<div class="tooltip" style="position:absolute; left:0vw; bottom:0.5vh; width:3.6vw; height:3.6vw; float: left; overflow: visible;">
-			<input id="toggleCameraControl" type="checkbox" onclick="toggleCameraControl(this)" style="width:100%; height:100%;" />
+<div id="ViewerDiv" class="ViewerDiv FillScreen"></div>
+<div id="UIDiv" class="UIDiv FillScreen">
+	<div id="TogglePanel">
+		<div class="tooltip Checkbox" style="left:0vw; float: left;">
+			<input id="toggleCameraControl" class="Toggle" type="checkbox" onclick="toggleCameraControl(this)"/>
 			<span class="tooltiptext">Toggle Camera Control</span>
 		</div>
-		<div class="tooltip" style="position:absolute; left:3.7vw; bottom:0.5vh; width:3.6vw; height:3.6vw; overflow: visible;">
-			<input id="toggleFaceNormals" type="checkbox" onclick="toggleFaceNormals(this)" style="width:100%; height:100%;" />
+		<div class="tooltip Checkbox" style="left:3.7vw;">
+			<input id="toggleFaceNormals" class="Toggle" type="checkbox" onclick="toggleFaceNormals(this)"/>
 			<span class="tooltiptext">Toggle Face Normals</span>
 		</div>
-		<div class="tooltip" style="position:absolute; left:7.4vw; bottom:0.5vh; width:3.6vw; height:3.6vw; float: right; overflow: visible;">
-			<input id="toggleVertexNormals" type="checkbox" onclick="toggleVertexNormals(this)" style="width:100%; height:100%;" />
+		<div class="tooltip Checkbox" style="left:7.4vw; float: right;">
+			<input id="toggleVertexNormals" class="Toggle" type="checkbox" onclick="toggleVertexNormals(this)"/>
 			<span class="tooltiptext">Toggle Vertex Normals</span>
 		</div>
 	</div>
-	<div id="FileSelector" class="FileSelector" style="position: absolute; left:0.5%; bottom:1.5%; width:15vw; height:3vw; background-color: white; visibility: visible;">
+	<div id="FileSelector" class="FileSelector">
 		<input type="file" id="fileSelector" onchange="SelectFile(this.files)">
 		<button id="loadFile" onClick="LoadSelectFile()">Load</button>
 	</div>
 </div>
-
 </body>
 
 <script src="vendor/jquery-3.3.1.min.js"></script>

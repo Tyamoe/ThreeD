@@ -35,6 +35,7 @@ function InitWebGL()
 
 	canvas.onmousedown = function(ev) 
 	{
+    	console.log("Pick(x, y)");
 		var x = ev.clientX, y = ev.clientY;
 
 		var rect = ev.target.getBoundingClientRect();

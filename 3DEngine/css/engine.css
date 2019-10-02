@@ -82,8 +82,34 @@ div.loader
 
 .Toggle
 {
+	background-color: transparent;
 	width: 100%;
 	height: 100%;
+	display: none;
+}
+
+.Toggle + label
+{
+	height: 100%;
+	width: 100%;
+	display: inline-block;
+    padding: 0 0 0 0px;
+}
+
+#toggleCameraControl + label
+{
+	background: url('../images/camera.png') no-repeat;
+	background-size: 100% 100%;
+}
+#toggleFaceNormals + label
+{
+	background: url('../images/faceNormals.png') no-repeat;
+	background-size: 100% 100%;
+}
+#toggleVertexNormals + label
+{
+	background: url('../images/vertNormals.png') no-repeat;
+	background-size: 100% 100%;
 }
 
 .hide 
@@ -100,23 +126,36 @@ div.loader
 #TogglePanel
 {
 	position: absolute;
-	right: 47vw;
-	bottom: 0.5vh;
-	width: 12.7vw;
+	right: 44.5vw;
+	bottom: 1vh;
+	width: 11.1vw;
 	height: 4vw;
-	background-color: grey;
+	background-color: rgb(232, 232, 232);
 	visibility: visible;
+	
+	border: 3px solid grey;
 }
 
 #FileSelector
 {
 	position: absolute;
-	left: 0.5%; 
-	bottom: 1.5%;
+	left: 1vw; 
+	bottom: 1vh;
 	width: 15vw;
-	height: 3vw;
-	background-color: white;
+	height: 4vw;
+	background-color: rgb(232, 232, 232);
 	visibility: visible;
+
+	text-align: center;
+	border: 3px solid grey;
+}
+
+#loadFile
+{
+	margin: auto 0;
+	font-size: 18px;
+	color: rgb(232, 232, 232);
+	background-color: rgb(32, 32, 32);
 }
 
 button.defaultButton

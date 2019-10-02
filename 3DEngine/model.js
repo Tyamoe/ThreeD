@@ -114,7 +114,7 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 		else
 		{
 			updateScale(ObjList[ObjCount], 9, 9, 9);
-			updateTransform(ObjList[ObjCount], 5, -2, 0);
+			//updateTransform(ObjList[ObjCount], 5, -2, 0);
 		}
 	}
 
@@ -270,6 +270,13 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 		var MaxDis = 0.0;
 		var MaxMag = 0.0;
 
+		var minX = 10000.0;
+		var maxX = -10000.0;
+		var minY = 10000.0;
+		var maxY = -10000.0;
+		var minZ = 10000.0;
+		var maxZ = -10000.0;
+
 		var hasNormals = false;
 		
 		var lines = this.result.split('\n');
@@ -291,6 +298,14 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 						MaxDis =  dis;
 						MaxMag = vec3.length(vvv);
 					}
+
+					minX = minX > vvv[0] ? vvv[0] : minX;
+					minY = minY > vvv[1] ? vvv[1] : minY;
+					minZ = minZ > vvv[2] ? vvv[2] : minZ;
+
+					maxX = maxX < vvv[0] ? vvv[0] : maxX;
+					maxY = maxY < vvv[1] ? vvv[1] : maxY;
+					maxZ = maxZ < vvv[2] ? vvv[2] : maxZ;
 					
 					Vertices.push(vvv[0]);
 					Vertices.push(vvv[1]);
@@ -340,6 +355,36 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 			var vec2 = vec3.create();
 
 			var crossP = vec3.create();
+
+			var w = Math.abs(maxX - minX);
+			var h = Math.abs(maxY - minY);
+			var d = Math.abs(maxZ - minZ);
+
+			var inX = Math.abs(minX);
+			var inY = Math.abs(minY);
+			var inZ = Math.abs(minZ);
+			var axX = Math.abs(maxX);
+			var axY = Math.abs(maxY);
+			var axZ = Math.abs(maxZ);
+
+			var dx_ = 0 - minX;
+			var dy_ = 0 - minY;
+			var dz_ = 0 - minZ;
+			var dx = (0 - maxX);
+			var dy = (0 - maxY);
+			var dz = (0 - maxZ);
+
+			var sx = (Math.abs(dx - dx_) / 2.0) + Math.abs(maxX);//( Math.max(axX, inX) - Math.min(axX, inX) ) / 2.0;
+			var sy = ((dy - dy_) / 2.0) + (maxY);//( Math.max(axY, inY) - Math.min(axY, inY) ) / 2.0;
+			var sz = (Math.abs(dz - dz_) / 2.0) - (maxZ);//( Math.max(axZ, inZ) - Math.min(axZ, inZ) ) / 2.0;
+
+			if(!Animate)
+			{
+				console.log("Dim: " + w + ", " + h + ", " + d);
+				console.log("Min: " + minX + ", " + minY + ", " + minZ);
+				console.log("Max: " + maxX + ", " + maxY + ", " + maxZ);
+				console.log("Shift: " + sx + ", " + sy + ", " + sz);
+			}
 			
 			//console.log("Ind: " + Indices.length + " | NVS: " + NormalsVertexSum.length);
 			// Face Normals
@@ -354,15 +399,38 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 				vec3.set(v2, Vertices[vi2], Vertices[vi2 + 1], Vertices[vi2 + 2]);
 				vec3.set(v3, Vertices[vi3], Vertices[vi3 + 1], Vertices[vi3 + 2]);
 
+				var x = (Vertices[vi1] + Vertices[vi2] + Vertices[vi3]) / 3.0;
+				var y = (Vertices[vi1 + 1] + Vertices[vi2 + 1] + Vertices[vi3 + 1]) / 3.0;
+				var z = (Vertices[vi1 + 2] + Vertices[vi2 + 2] + Vertices[vi3 + 2]) / 3.0;
+
+				var oldLow = 0.0;
+				var oldHigh = MaxMag;
+				var newLow = -1.0;
+				var newHigh = 1.0;
+
+				if(!Animate)
+				{
+					x += sx;
+					y += sy;
+					z += sz;
+				}
+
+				x = ( (x - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
+				y = ( (y - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
+				z = ( (z - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
+
 				vec3.subtract(vec1, v1, v2);
 				vec3.subtract(vec2, v1, v3);
 
 				vec3.cross(crossP, vec1, vec2);
 				vec3.normalize(crossP, crossP);
 
-				NormalsFace.push(crossP[0]);
-				NormalsFace.push(crossP[1]);
-				NormalsFace.push(crossP[2]);
+				NormalsFace.push(x);
+				NormalsFace.push(y);
+				NormalsFace.push(z);
+				NormalsFace.push(x + (crossP[0] * 0.02));
+				NormalsFace.push(y + (crossP[1] * 0.02));
+				NormalsFace.push(z + (crossP[2] * 0.02));
 
 				NormalsVertexSum[vi1 / 3][0] += crossP[0];
 				NormalsVertexSum[vi1 / 3][1] += crossP[1];
@@ -389,15 +457,30 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 				//NormalsVertices.push(Vertices[i + 0]);
 				//NormalsVertices.push(Vertices[i + 1]);
 				//NormalsVertices.push(Vertices[i + 2]);
-				NormalsVertices.push( ( (Vertices[i + 0] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
-				NormalsVertices.push( ( (Vertices[i + 1] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
-				NormalsVertices.push( ( (Vertices[i + 2] - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow) );
+				
+				var x = Vertices[i + 0];
+				var y = Vertices[i + 1];
+				var z = Vertices[i + 2];
+
+				if(!Animate)
+				{
+					x += sx;
+					y += sy;
+					z += sz;
+				}
+
+				x = ( (x - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
+				y = ( (y - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
+				z = ( (z - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
+				NormalsVertices.push( x );
+				NormalsVertices.push( y );
+				NormalsVertices.push( z );
 
 				vec3.normalize(vec1, NormalsVertexSum[i / 3]);
 
-				NormalsVertices.push(vec1[0]);
-				NormalsVertices.push(vec1[1]);
-				NormalsVertices.push(vec1[2]);
+				NormalsVertices.push(x + (vec1[0] * 0.02));
+				NormalsVertices.push(y + (vec1[1] * 0.02));
+				NormalsVertices.push(z + (vec1[2] * 0.02));
 			}
 		}
 

@@ -19,6 +19,7 @@ var shaderSkybox = null;
 var shaderSmall = null;
 var shaderPick = null;
 var shaderPhong = null;
+var shaderLine = null;
 
 var texturesLoaded = 0;
 var modelsLoaded = false;

@@ -106,6 +106,30 @@ function makeShaders()
 	shaderPick.MVPUniform = gl.getUniformLocation(shaderPick, "MVP");
 	shaderPick.ColorUniform = gl.getUniformLocation(shaderPick, "fcolor");
 
+	// LINE
+	var vertexShader3d = loadShaderLocal(gl, SourceLineVS, true);
+	var fragmentShader3d = loadShaderLocal(gl, SourceLineFS, false);
+
+	shaderLine = gl.createProgram();
+	gl.attachShader(shaderLine, vertexShader3d);
+	gl.attachShader(shaderLine, fragmentShader3d);
+	gl.linkProgram(shaderLine);
+
+	if (!gl.getProgramParameter(shaderLine, gl.LINK_STATUS)) 
+	{
+		console.error('ERROR linking shaderLine!', gl.getProgramInfoLog(shaderLine));
+		return;
+	}
+	gl.validateProgram(shaderLine);
+	if (!gl.getProgramParameter(shaderLine, gl.VALIDATE_STATUS)) 
+	{
+		console.error('ERROR validating shaderLine!', gl.getProgramInfoLog(shaderLine));
+		return;
+	}
+
+	shaderLine.MVPUniform = gl.getUniformLocation(shaderLine, "MVP");
+	shaderLine.ColorUniform = gl.getUniformLocation(shaderLine, "fcolor");
+
 	// PHONG
 	var vertexShader212 = loadShaderLocal(gl, SourcePhongVS, true);
 	var fragmentShader212 = loadShaderLocal(gl, SourcePhongFS, false);
@@ -189,6 +213,31 @@ function makeShaders()
 	        );
 
 	        gl.enableVertexAttribArray(obj.AttrLocNormal);
+	    }
+	}
+
+
+	shaderLine.setUniforms = function(obj, lineColor)
+	{
+	    gl.uniformMatrix4fv(shaderLine.MVPUniform, false, obj.MVPMatrix);
+	    gl.uniform4fv(shaderLine.ColorUniform, lineColor);
+	}
+
+	shaderLine.applyAttribute = function(obj)
+	{
+		obj.AttrLocPosition = gl.getAttribLocation(shaderLine, 'vertPosition');
+	    if(obj.AttrLocPosition != -1)
+	    {
+	        gl.vertexAttribPointer(
+	            obj.AttrLocPosition,        // Attribute location
+	            3,                          // Number of elements per attribute
+	            gl.FLOAT,                   // Type of elements
+	            gl.FALSE,
+	            3 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
+	            0                           // Offset from the beginning of a single vertex to this attribute
+	        );
+
+	        gl.enableVertexAttribArray(obj.AttrLocPosition);
 	    }
 	}
 
@@ -332,8 +381,9 @@ var SourcePhongVS = `
 
 	void main()
 	{
+		vec3 norm = vertNormal - vertPosition;
     	fragPos = vec3(Model * vec4(vertPosition, 1.0));
-    	Normal = InvTrModel * vec4(vertNormal, 1.0); 
+    	Normal = InvTrModel * vec4(normalize(norm), 1.0); 
 
 		gl_Position = MVP * vec4(vertPosition, 1.0);
 	}
@@ -375,6 +425,32 @@ var SourcePhongFS = `
 	    gl_FragColor = vec4(result, 1.0);
 
 		//gl_FragColor = fcolor;
+	}
+`;
+
+
+var SourceLineVS = `
+	precision mediump float;
+
+	attribute vec3 vertPosition;
+
+	uniform mat4 MVP;
+
+	void main()
+	{
+		gl_Position = MVP * vec4(vertPosition, 1.0);
+	}
+`;
+
+
+var SourceLineFS = `
+	precision mediump float;
+
+	uniform vec4 fcolor;
+
+	void main()
+	{
+		gl_FragColor = fcolor;
 	}
 `;
 

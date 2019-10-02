@@ -6,6 +6,8 @@ var Mesh = function(Name)
 	
 	this.faceNormals = [];
 
+	this.VBOFace = null;
+
 	this.VBO = null;
 	this.IBO = null;
 
@@ -20,6 +22,10 @@ var Mesh = function(Name)
 		this.IBO = gl.createBuffer();
 		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.IBO);
 		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint32Array(this.indices), gl.STATIC_DRAW);
+		
+		this.VBOFace = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, this.VBOFace);
+		gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.faceNormals), gl.STATIC_DRAW);
 	}
 }
 

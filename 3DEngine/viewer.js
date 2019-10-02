@@ -61,14 +61,20 @@ function UnfocusNode()
 
 function toggleCameraControl(checkbox)
 {
-	if(checkbox.checked)
-	{
-		ControlCamera = true;
-	}
-	else
-	{
-		ControlCamera = false;
-	}
+	if(checkbox.checked) ControlCamera = true;
+	else ControlCamera = false;
+}
+
+function toggleFaceNormals(checkbox)
+{
+	if(checkbox.checked) DrawNormalsFace = true;
+	else DrawNormalsFace = false;
+}
+
+function toggleVertexNormals(checkbox)
+{
+	if(checkbox.checked) DrawNormalsVertex = true;
+	else DrawNormalsVertex = false;
 }
 
 function togglePause()

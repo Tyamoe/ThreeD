@@ -5,6 +5,9 @@ var RenderMode =
   Skybox: 3,
 };
 
+var DrawNormalsVertex = false;
+var DrawNormalsFace = false;
+
 var ObjectsLoaded = 0;
 var PV = mat4.create();
 
@@ -44,6 +47,11 @@ function tick()
         if(Rendering)
         {
             DrawObjects();
+
+            if(DrawNormalsVertex)
+                DrawVertexNormals();
+            if(DrawNormalsFace)
+                DrawFaceNormals();
         }
     }
     else 
@@ -126,6 +134,53 @@ function DrawObjects()
             gl.depthRange(oldRange[0], oldRange[1]);
         }
     }
+}
+
+function DrawVertexNormals() 
+{
+    gl.lineWidth(0.1);
+    for(var i = 0; i < ObjCount; i++)
+    {
+        var obj = ObjList[i];
+
+        if(!obj.draw || obj.renderMode != RenderMode.Phong) continue;
+
+        // Draw Lines
+        gl.bindBuffer(gl.ARRAY_BUFFER, obj.mesh.VBO);
+
+        gl.useProgram(shaderLine);
+    
+        shaderLine.setUniforms(obj, [1.0, 0.0, 0.0, 1.0]);
+        shaderLine.applyAttribute(obj);
+
+        gl.drawArrays(gl.LINES, 0, obj.mesh.vertices.length / 3);
+    }
+}
+
+function DrawFaceNormals() 
+{
+    gl.lineWidth(0.1);
+    for(var i = 0; i < ObjCount; i++)
+    {
+        var obj = ObjList[i];
+
+        if(!obj.draw || obj.renderMode != RenderMode.Phong) continue;
+
+        // Draw Lines
+        gl.bindBuffer(gl.ARRAY_BUFFER, obj.mesh.VBOFace);
+    
+        gl.useProgram(shaderLine);
+
+        shaderLine.setUniforms(obj, [1.0, 1.0, 0.0, 1.0]);
+        shaderLine.applyAttribute(obj);
+
+        gl.drawArrays(gl.LINES, 0, obj.mesh.faceNormals.length / 3);
+    }
+}
+
+function DrawDecals() 
+{
+    // None object associated decals (line, boxes, arrows)
 }
 
 function resize() 

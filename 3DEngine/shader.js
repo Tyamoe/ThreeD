@@ -175,7 +175,7 @@ function makeShaders()
 	    var lc = vec3.create();
 	    vec3.set(lc, 1, 1, 1);
 	    var lp = vec3.create();
-	    vec3.set(lp, 0, 5, 0);
+	    vec3.set(lp, 0, 15, 5);
 
 	    gl.uniform3fv(shaderPhong.LightPosUniform, lp);
 	    gl.uniform3fv(shaderPhong.LightColorUniform, lc);
@@ -217,19 +217,19 @@ function makeShaders()
 	}
 
 
-	shaderLine.setUniforms = function(obj, lineColor)
+	shaderLine.setUniforms = function(Matrix, lineColor)
 	{
-	    gl.uniformMatrix4fv(shaderLine.MVPUniform, false, obj.MVPMatrix);
+	    gl.uniformMatrix4fv(shaderLine.MVPUniform, false, Matrix);
 	    gl.uniform4fv(shaderLine.ColorUniform, lineColor);
 	}
 
-	shaderLine.applyAttribute = function(obj)
+	shaderLine.applyAttribute = function()
 	{
-		obj.AttrLocPosition = gl.getAttribLocation(shaderLine, 'vertPosition');
-	    if(obj.AttrLocPosition != -1)
+		var loc = gl.getAttribLocation(shaderLine, 'vertPosition');
+	    if(loc != -1)
 	    {
 	        gl.vertexAttribPointer(
-	            obj.AttrLocPosition,        // Attribute location
+	            loc,        // Attribute location
 	            3,                          // Number of elements per attribute
 	            gl.FLOAT,                   // Type of elements
 	            gl.FALSE,
@@ -237,7 +237,7 @@ function makeShaders()
 	            0                           // Offset from the beginning of a single vertex to this attribute
 	        );
 
-	        gl.enableVertexAttribArray(obj.AttrLocPosition);
+	        gl.enableVertexAttribArray(loc);
 	    }
 	}
 

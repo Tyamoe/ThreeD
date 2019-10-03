@@ -36,7 +36,7 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 
 		ObjList[ObjCount].texture = loadCubeMap(gl, Shading);
 		ObjList[ObjCount].transform.pos.z = 0;//-7;
-		updateScale(ObjList[ObjCount], 34, 34, 34);
+		updateScale(ObjList[ObjCount], 154, 154, 154);
 
 		ObjList[ObjCount].textureID = texturesLoaded;
 		texturesLoaded++;
@@ -70,8 +70,8 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 
 			var theta = (degToRad(currObj));
 
-			var x = 6 * Math.sin(theta);
-			var z = 6 * Math.cos(theta);
+			var x = 8 * Math.sin(theta);
+			var z = 8 * Math.cos(theta);
 
 			ObjList[ObjCount].transform.pos[0] = x;
 			ObjList[ObjCount].transform.pos[2] = z;
@@ -105,8 +105,8 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 
 			var theta = (degToRad(currObj));
 
-			var x = 6 * Math.sin(theta);
-			var z = 6 * Math.cos(theta);
+			var x = 8 * Math.sin(theta);
+			var z = 8 * Math.cos(theta);
 
 			ObjList[ObjCount].transform.pos[0] = x;
 			ObjList[ObjCount].transform.pos[2] = z;
@@ -229,7 +229,6 @@ function loadCubeMap(gl, imgAry)
 	{
 		gl.bindTexture(gl.TEXTURE_CUBE_MAP, texID);
 		gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_Z, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image5);
-		CanvasLoaded();
 	}
 
 	const image6 = new Image();
@@ -257,6 +256,9 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 	
 	reader.onload = function(progressEvent)
 	{
+		if(Name == "lucy_princeton.obj")
+			CanvasLoaded();
+
 		var Vertices = [];
 		var NormalsVertices = [];
 		var NormalsFace = [];
@@ -367,16 +369,13 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 			var axY = Math.abs(maxY);
 			var axZ = Math.abs(maxZ);
 
-			var dx_ = 0 - minX;
-			var dy_ = 0 - minY;
-			var dz_ = 0 - minZ;
-			var dx = (0 - maxX);
-			var dy = (0 - maxY);
-			var dz = (0 - maxZ);
+			var dx = maxX + minX;
+			var dy = maxY + minY;
+			var dz = maxZ + minZ;
 
-			var sx = (Math.abs(dx - dx_) / 2.0) + Math.abs(maxX);//( Math.max(axX, inX) - Math.min(axX, inX) ) / 2.0;
-			var sy = ((dy - dy_) / 2.0) + (maxY);//( Math.max(axY, inY) - Math.min(axY, inY) ) / 2.0;
-			var sz = (Math.abs(dz - dz_) / 2.0) - (maxZ);//( Math.max(axZ, inZ) - Math.min(axZ, inZ) ) / 2.0;
+			var sx = (dx / 2.0);
+			var sy = (dy / 2.0);
+			var sz = (dz / 2.0);
 
 			if(!Animate)
 			{
@@ -410,9 +409,9 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 
 				if(!Animate)
 				{
-					x += sx;
-					y += sy;
-					z += sz;
+					x -= sx;
+					y -= sy;
+					z -= sz;
 				}
 
 				x = ( (x - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
@@ -454,21 +453,18 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 				var oldHigh = MaxMag;
 				var newLow = -1.0;
 				var newHigh = 1.0;
-				//NormalsVertices.push(Vertices[i + 0]);
-				//NormalsVertices.push(Vertices[i + 1]);
-				//NormalsVertices.push(Vertices[i + 2]);
-				
+
 				var x = Vertices[i + 0];
 				var y = Vertices[i + 1];
 				var z = Vertices[i + 2];
 
 				if(!Animate)
 				{
-					x += sx;
-					y += sy;
-					z += sz;
+					x -= sx;
+					y -= sy;
+					z -= sz;
 				}
-
+				
 				x = ( (x - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
 				y = ( (y - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);
 				z = ( (z - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);

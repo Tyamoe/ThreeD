@@ -93,9 +93,39 @@ function togglePause()
 
 function CanvasLoaded()
 {
-  var elem = document.getElementById('loading');
-  elem.parentNode.removeChild(elem);
-  canvasInit = true;
+ 	var elem = document.getElementById('loading');
+  	elem.parentNode.removeChild(elem);
+  	canvasInit = true;
+
+  	// TEMP DELETE BAD
+
+  	for(var i = 0.0; i < 360.0; i+=0.2)
+  	{
+		var theta = degToRad(i);
+
+		var x = 8 * Math.sin(theta);
+		var z = 8 * Math.cos(theta);
+
+		if(i != 0.0)
+		{
+			decalLines.push(x);
+			decalLines.push(0);
+			decalLines.push(z);
+		}
+		decalLines.push(x);
+		decalLines.push(0);
+		decalLines.push(z);
+  	}
+	var theta = degToRad(0);
+	var x = 8 * Math.sin(theta);
+	var z = 8 * Math.cos(theta);
+	decalLines.push(x);
+	decalLines.push(0);
+	decalLines.push(z);
+
+	decalLinesVBO = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, decalLinesVBO);
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(decalLines), gl.STATIC_DRAW);
 }
 
 function toggleFullScreenButton() 

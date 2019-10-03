@@ -1,8 +1,8 @@
 function makeScene()
 {
 	camera = new Camera();
-	vec3.set(camera.Pos, 0.36, 14.23, 14.8);
-	vec3.set(camera.Front, 0, -1, -1);
+	vec3.set(camera.Pos, 2.074, 15.127, 18.045);
+	vec3.set(camera.Front, -0.0996, -0.6461, -0.7567);
 	vec3.set(camera.Up, 0, 1, 0);
 
 	// Load Objects
@@ -14,7 +14,7 @@ function makeScene()
 	//var sphere = loadObjFromVerts("sphere4", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	//loadObjFromVerts("sphere5", MeshBox, ["block.png"], RenderMode.Texture, true);
 
-	loadObjFromVerts("Skybox", MeshBox, ["dark_px.jpg", "dark_nx.jpg", "dark_py.jpg", "dark_ny.jpg", "dark_pz.jpg", "dark_nz.jpg"], RenderMode.Skybox, false);
+	//loadObjFromVerts("Skybox", MeshBox, ["dark_px.jpg", "dark_nx.jpg", "dark_py.jpg", "dark_ny.jpg", "dark_pz.jpg", "dark_nz.jpg"], RenderMode.Skybox, false);
 	
 	loadObjFromVerts("bunny.obj", "https://tyamoe.com/scripts/models/sphere.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("sphere.obj", "https://tyamoe.com/scripts/models/sphere.obj", new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);

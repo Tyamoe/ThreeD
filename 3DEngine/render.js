@@ -8,6 +8,9 @@ var RenderMode =
 var DrawNormalsVertex = false;
 var DrawNormalsFace = false;
 
+var decalLines = [];
+var decalLinesVBO = null;
+
 var ObjectsLoaded = 0;
 var PV = mat4.create();
 
@@ -52,6 +55,8 @@ function tick()
                 DrawVertexNormals();
             if(DrawNormalsFace)
                 DrawFaceNormals();
+
+            DrawDecals();
         }
     }
     else 
@@ -150,8 +155,8 @@ function DrawVertexNormals()
 
         gl.useProgram(shaderLine);
     
-        shaderLine.setUniforms(obj, [1.0, 0.0, 0.0, 1.0]);
-        shaderLine.applyAttribute(obj);
+        shaderLine.setUniforms(obj.MVPMatrix, [1.0, 0.0, 0.0, 1.0]);
+        shaderLine.applyAttribute();
 
         gl.drawArrays(gl.LINES, 0, obj.mesh.vertices.length / 3);
     }
@@ -171,8 +176,8 @@ function DrawFaceNormals()
     
         gl.useProgram(shaderLine);
 
-        shaderLine.setUniforms(obj, [1.0, 1.0, 0.0, 1.0]);
-        shaderLine.applyAttribute(obj);
+        shaderLine.setUniforms(obj.MVPMatrix, [1.0, 1.0, 0.0, 1.0]);
+        shaderLine.applyAttribute();
 
         gl.drawArrays(gl.LINES, 0, obj.mesh.faceNormals.length / 3);
     }
@@ -181,6 +186,16 @@ function DrawFaceNormals()
 function DrawDecals() 
 {
     // None object associated decals (line, boxes, arrows)
+
+    // Draw lines
+    gl.bindBuffer(gl.ARRAY_BUFFER, decalLinesVBO);
+
+    gl.useProgram(shaderLine);
+
+    shaderLine.setUniforms(PV, [1.0, 1.0, 1.0, 1.0]);
+    shaderLine.applyAttribute();
+
+    gl.drawArrays(gl.LINES, 0, decalLines.length / 3);
 }
 
 function resize() 

@@ -36,7 +36,6 @@ function InitWebGL()
 
 	canvas.onmousedown = function(ev) 
 	{
-    	console.log("Pick(x, y)");
 		var x = ev.clientX, y = ev.clientY;
 
 		var rect = ev.target.getBoundingClientRect();
@@ -69,7 +68,7 @@ function InitWebGL()
 	gl.enable(gl.CULL_FACE);							//Cull back face, so only show triangles that are created clockwise
 	gl.depthFunc(gl.LEQUAL);							//Near things obscure far things
 	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);	//Setup default alpha blending
-	gl.clearColor(1.0, 0.0, 0.0, 1.0);	  //Set clear color
+	gl.clearColor(0.12, 0.12, 0.12, 1.0);	  //Set clear color
 
 	mouse = new Mouse();
 	

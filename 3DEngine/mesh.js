@@ -80,6 +80,7 @@ var boxIndices =
 		22, 20, 23
 ];
 
+var SphereFaces = [];
 var SphereVertices = [];
 var SphereIndices = [];
 
@@ -120,14 +121,15 @@ function makeMeshes()
 	MeshSphere = new Mesh("sphere");
 	MeshSphere.vertices = SphereVertices;
 	MeshSphere.indices = SphereIndices;
+	MeshSphere.faceNormals = SphereFaces;
 	MeshSphere.makeBuffers();
 }
 
 function makeSphere()
 {
-	var radius = 0.5;
-	var stackCount = 10;
-	var sectorCount = 15;
+	var radius = 0.1;
+	var stackCount = 20;
+	var sectorCount = 25;
 
 	var x, y, z, xy, lengthInv = 1.0 / radius;
 
@@ -137,46 +139,43 @@ function makeSphere()
 
 	for (var i = 0; i <= stackCount; ++i)
 	{
-		stackAngle = Math.PI / 2 - i * stackStep;        // starting from pi/2 to -pi/2
-		xy = radius * Math.cos(stackAngle);             // r * cos(u)
-		z = radius * Math.sin(stackAngle);              // r * sin(u)
+		stackAngle = Math.PI / 2 - i * stackStep;
+		xy = radius * Math.cos(stackAngle);
+		z = radius * Math.sin(stackAngle);
 
-		// add (sectorCount+1) vertices per stack
-		// the first and last vertices have same position and normal, but different tex coords
 		for (var j = 0; j <= sectorCount; ++j)
 		{
-			sectorAngle = j * sectorStep;           // starting from 0 to 2pi
+			sectorAngle = j * sectorStep;
 
-			// vertex position (x, y, z)
-			x = xy * Math.cos(sectorAngle);             // r * cos(u) * cos(v)
-			y = xy * Math.sin(sectorAngle);             // r * cos(u) * sin(v)
-			//SphereVertices.push({ x, y, z });
+			x = xy * Math.cos(sectorAngle);
+			y = xy * Math.sin(sectorAngle);
+
 			SphereVertices.push(x);
 			SphereVertices.push(y);
 			SphereVertices.push(z);
 
-			// normalized vertex normal (nx, ny, nz)
-			nx = x * lengthInv;
-			ny = y * lengthInv;
-			nz = z * lengthInv;
-			//normals.push_back({ nx, ny, nz });
-			SphereVertices.push(nx);
-			SphereVertices.push(ny);
-			SphereVertices.push(nz);
+			var norm = vec3.create();
+			vec3.set(norm, x * lengthInv, y * lengthInv, z * lengthInv);
+			vec3.normalize(norm, norm);
+
+			nx += norm[0];
+			ny += norm[1];
+			nz += norm[2];
+
+			SphereVertices.push(x + norm[0] * 0.0235);
+			SphereVertices.push(y + norm[1] * 0.0235);
+			SphereVertices.push(z + norm[2] * 0.0235);
 		}
 	}
 
-	// generate CCW index list of sphere triangles
 	var k1, k2;
 	for (var i = 0; i < stackCount; ++i)
 	{
-		k1 = i * (sectorCount + 1);     // beginning of current stack
-		k2 = k1 + sectorCount + 1;      // beginning of next stack
+		k1 = i * (sectorCount + 1);
+		k2 = k1 + sectorCount + 1;
 
 		for (var j = 0; j < sectorCount; ++j, ++k1, ++k2)
 		{
-			// 2 triangles per sector excluding first and last stacks
-			// k1 => k2 => k1+1
 			if (i != 0)
 			{
 				SphereIndices.push(k1);
@@ -184,7 +183,6 @@ function makeSphere()
 				SphereIndices.push(k1 + 1);
 			}
 
-			// k1+1 => k2 => k2+1
 			if (i != (stackCount - 1))
 			{
 				SphereIndices.push(k1 + 1);
@@ -192,5 +190,34 @@ function makeSphere()
 				SphereIndices.push(k2 + 1);
 			}
 		}
+	}
+
+	var nx = 0.0, ny = 0.0, nz = 0.0;
+	for(var i = 0; i < SphereIndices.length; i += 3)
+	{
+		var x1, y1, z1;
+		var i1 = SphereIndices[i];
+		var i2 = SphereIndices[i + 1];
+		var i3 = SphereIndices[i + 2];
+
+		x1 = (SphereVertices[i1 * 6 + 0] + SphereVertices[i2 * 6 + 0] + SphereVertices[i3 * 6 + 0]) / 3.0;
+		y1 = (SphereVertices[i1 * 6 + 1] + SphereVertices[i2 * 6 + 1] + SphereVertices[i3 * 6 + 1]) / 3.0;
+		z1 = (SphereVertices[i1 * 6 + 2] + SphereVertices[i2 * 6 + 2] + SphereVertices[i3 * 6 + 2]) / 3.0;
+
+		nx = (SphereVertices[i1 * 6 + 3] + SphereVertices[i2 * 6 + 3] + SphereVertices[i3 * 6 + 3]) / 3.0;
+		ny = (SphereVertices[i1 * 6 + 4] + SphereVertices[i2 * 6 + 4] + SphereVertices[i3 * 6 + 4]) / 3.0;
+		nz = (SphereVertices[i1 * 6 + 5] + SphereVertices[i2 * 6 + 5] + SphereVertices[i3 * 6 + 5]) / 3.0;
+
+		SphereFaces.push(x1);
+		SphereFaces.push(y1);
+		SphereFaces.push(z1);
+
+		var norm1 = vec3.create();
+		vec3.set(norm1, nx, ny, nz);
+		vec3.normalize(norm1, norm1);
+
+		SphereFaces.push(x1 + norm1[0] * 0.02);
+		SphereFaces.push(y1 + norm1[1] * 0.02);
+		SphereFaces.push(z1 + norm1[2] * 0.02);
 	}
 }

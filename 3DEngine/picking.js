@@ -10,6 +10,8 @@ function Pick(x, y)
     {
         var obj = ObjList[i];
 
+        if(!obj.draw) continue;
+
         mat4.copy(obj.vMatrix, camera.view);
         mat4.copy(obj.pMatrix, persp);
 

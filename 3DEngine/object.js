@@ -63,6 +63,8 @@ var Obj = function(name, Mesh)
 {
 	this.name = name;
 	this.draw = true;
+	this.animate = true;
+	this.angle = 0;
 
 	this.transform = {};
 	this.mesh = Mesh;

@@ -48,9 +48,32 @@ function SelectFile(files)
 	var path = NetUtil.newURI(aFileURL).QueryInterface(Ci.nsIFileURL).file.path;*/
 }
 
+function ShowObj(name)
+{
+	for(var i = 0; i < ObjCount; i++)
+	{
+		if(ObjList[i].name.includes(".obj"))
+		{
+			ObjList[i].draw = false;
+		}
+ 	}
+
+	var obj = getObjByName(name);
+	obj.draw = true;
+}
+
 function LoadSelectFile()
 {
-	loadObj(fileToLoad, fileToLoad.name, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, false);
+	for(var i = 0; i < ObjCount; i++)
+	{
+		if(ObjList[i].name.includes(".obj"))
+		{
+			ObjList[i].draw = false;
+		}
+ 	}
+
+	var obj = getObjByName(fileToLoad.name);
+	obj.draw = true;
 }
 
 function UnfocusNode()
@@ -103,8 +126,8 @@ function CanvasLoaded()
   	{
 		var theta = degToRad(i);
 
-		var x = 8 * Math.sin(theta);
-		var z = 8 * Math.cos(theta);
+		var x = 3 * Math.sin(theta);
+		var z = 3 * Math.cos(theta);
 
 		if(i != 0.0)
 		{
@@ -117,8 +140,8 @@ function CanvasLoaded()
 		decalLines.push(z);
   	}
 	var theta = degToRad(0);
-	var x = 8 * Math.sin(theta);
-	var z = 8 * Math.cos(theta);
+	var x = 3 * Math.sin(theta);
+	var z = 3 * Math.cos(theta);
 	decalLines.push(x);
 	decalLines.push(0);
 	decalLines.push(z);

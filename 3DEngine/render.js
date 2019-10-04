@@ -30,6 +30,22 @@ window.requestAnimFrame = (function()
     );
 })();
 
+function animate()
+{
+    for(var i = 0; i < ObjCount; i++)
+    {
+        var obj = ObjList[i];
+        if(!obj.animate) continue;
+
+        obj.angle += 0.1;
+
+        var theta = (degToRad(obj.angle));
+
+        obj.transform.pos[0] = 3 * Math.sin(theta);
+        obj.transform.pos[2] = 3 * Math.cos(theta);
+    }
+}
+
 function tick() 
 {
     requestAnimFrame(tick);
@@ -49,6 +65,8 @@ function tick()
 
         if(Rendering)
         {
+            animate();
+
             DrawObjects();
 
             if(DrawNormalsVertex)
@@ -61,7 +79,7 @@ function tick()
     }
     else 
     {
-        console.log(ObjectsLoaded + "} ObjectsLoaded == ObjCount }" + ObjCount)
+        //console.log(ObjectsLoaded + "} ObjectsLoaded == ObjCount }" + ObjCount)
     }
 }
 

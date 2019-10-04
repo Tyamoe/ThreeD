@@ -3,7 +3,7 @@
 {
   position: relative;
   display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  //border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
@@ -21,9 +21,17 @@
   position: absolute;
   z-index: 1;
   
-  bottom: 100%;
   left: 50%;
   margin-left: -60px; /* Use half of the width (120/2 = 60), to center the tooltip */
+}
+
+.tooltip .tooltiptop
+{
+  bottom: 100%;
+}
+.tooltip .tooltipbottom
+{
+  top: 100%;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
@@ -63,6 +71,28 @@ div.loader
   100% { transform: rotate(360deg); } 
 }
 
+.CentralObj
+{
+	text-align: center;
+	position: absolute;
+	top: 0vh;
+	width: 4.28vw;
+	height: 4vw;
+}
+
+#CentralObjPanel
+{
+	position: absolute;
+	left: 22.18vw;
+	top: 1vh;
+	width: 55.64vw;
+	height: 4vw;
+	background-color: rgb(30, 30, 30);
+	visibility: visible;
+	
+	border: 3px solid grey;
+}
+
 .FillScreen
 {
 	position: absolute;
@@ -75,9 +105,9 @@ div.loader
 .Checkbox
 {
 	position: absolute;
-	bottom: 0.5vh;
-	width: 3.6vw;
-	height: 3.6vw;
+	bottom: 0.0vh;
+	width: 2.75vw;
+	height: 2.75vw;
 }
 
 .Toggle
@@ -96,11 +126,6 @@ div.loader
     padding: 0 0 0 0px;
 }
 
-#toggleCameraControl + label
-{
-	background: url('../images/camera.png') no-repeat;
-	background-size: 100% 100%;
-}
 #toggleFaceNormals + label
 {
 	background: url('../images/faceNormals.png') no-repeat;
@@ -126,10 +151,10 @@ div.loader
 #TogglePanel
 {
 	position: absolute;
-	right: 44.5vw;
+	right: 47.2vw;
 	bottom: 1vh;
-	width: 11.1vw;
-	height: 4vw;
+	width: 5.6vw;
+	height: 2.75vw;
 	background-color: rgb(232, 232, 232);
 	visibility: visible;
 	

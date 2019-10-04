@@ -7,6 +7,7 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 	ObjectsLoaded++;
 	if(isString(mesh))
 	{	
+		mesh = modelPath + mesh;
 		var blob = null;
 		var xhr = new XMLHttpRequest();
 		xhr.open("GET", mesh);
@@ -28,6 +29,7 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 
 	ObjList[ObjCount].transform = new Transform();
 	ObjList[ObjCount].renderMode = renderMode;
+	ObjList[ObjCount].animate = Animate;
 
 	if(renderMode == RenderMode.Skybox)
 	{
@@ -105,15 +107,17 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 
 			var theta = (degToRad(currObj));
 
-			var x = 8 * Math.sin(theta);
-			var z = 8 * Math.cos(theta);
+			var x = 3 * Math.sin(theta);
+			var z = 3 * Math.cos(theta);
 
+			ObjList[ObjCount].angle = currObj;
 			ObjList[ObjCount].transform.pos[0] = x;
 			ObjList[ObjCount].transform.pos[2] = z;
 		}
 		else
 		{
-			updateScale(ObjList[ObjCount], 9, 9, 9);
+			ObjList[ObjCount].draw = false;
+			updateScale(ObjList[ObjCount], 0, 0, 0);
 			//updateTransform(ObjList[ObjCount], 5, -2, 0);
 		}
 	}
@@ -362,30 +366,14 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 			var h = Math.abs(maxY - minY);
 			var d = Math.abs(maxZ - minZ);
 
-			var inX = Math.abs(minX);
-			var inY = Math.abs(minY);
-			var inZ = Math.abs(minZ);
-			var axX = Math.abs(maxX);
-			var axY = Math.abs(maxY);
-			var axZ = Math.abs(maxZ);
+			var dx = maxX + minX; //
+			var dy = maxY + minY; //
+			var dz = maxZ + minZ; //
 
-			var dx = maxX + minX;
-			var dy = maxY + minY;
-			var dz = maxZ + minZ;
+			var sx = (dx / 2.0); //
+			var sy = (dy / 2.0); //
+			var sz = (dz / 2.0); //
 
-			var sx = (dx / 2.0);
-			var sy = (dy / 2.0);
-			var sz = (dz / 2.0);
-
-			if(!Animate)
-			{
-				console.log("Dim: " + w + ", " + h + ", " + d);
-				console.log("Min: " + minX + ", " + minY + ", " + minZ);
-				console.log("Max: " + maxX + ", " + maxY + ", " + maxZ);
-				console.log("Shift: " + sx + ", " + sy + ", " + sz);
-			}
-			
-			//console.log("Ind: " + Indices.length + " | NVS: " + NormalsVertexSum.length);
 			// Face Normals
 			for(var i = 0; i < (Indices.length / 3); i++)
 			{
@@ -409,9 +397,9 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 
 				if(!Animate)
 				{
-					x -= sx;
-					y -= sy;
-					z -= sz;
+					x -= sx; //
+					y -= sy; //
+					z -= sz; //
 				}
 
 				x = ( (x - oldLow) / (oldHigh - oldLow) ) * (newHigh - newLow + newLow);

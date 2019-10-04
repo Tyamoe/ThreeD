@@ -2,6 +2,7 @@
 window.addEventListener('mousemove', handleHover, false);
 ///window.addEventListener('mousedown', handleClick, false);
 window.addEventListener('keydown', handleKeys, false);
+window.addEventListener('keyup', handleKeysUp, false);
 window.addEventListener('wheel', handleScroll, false);
 
 var Init = false;
@@ -27,6 +28,15 @@ function handleScroll(event)
   //camera.fov += (event.deltaY / event.deltaY);
 }
 
+function handleKeysUp(event)
+{
+  if(event.keyCode == 17)
+  {
+    Init = false;
+    ControlCamera = false;
+  }
+}
+
 function handleKeys(event)
 {
   if(!WebGlInitialized)
@@ -39,12 +49,21 @@ function handleKeys(event)
     return;
   }
 
+  if(event.keyCode == 17)
+  {
+    if(!ControlCamera && Init)
+    {
+      Init = false;
+    }
+    ControlCamera = true;
+  }
+
   // UI Hotkeys
   if(event.keyCode == 67)
   {//C
-    ControlCamera = !ControlCamera;
-    var toggle = document.getElementById("toggleCameraControl");
-    toggle.checked = ControlCamera;
+    //ControlCamera = !ControlCamera;
+    //var toggle = document.getElementById("toggleCameraControl");
+    //toggle.checked = ControlCamera;
   }
 
   // Camera Control
@@ -68,11 +87,11 @@ function handleKeys(event)
   }
   if(event.keyCode == 81)
   {//Q
-    vec3.scaleAndAdd(camera.Pos, camera.Pos, camera.Up, speed);
+    vec3.scaleAndAdd(camera.Pos, camera.Pos, camera.Up, -speed);
   }
   if(event.keyCode == 69)
   {//E
-    vec3.scaleAndAdd(camera.Pos, camera.Pos, camera.Up, -speed);
+    vec3.scaleAndAdd(camera.Pos, camera.Pos, camera.Up, speed);
   }
 
   //HandleClusterF(event.keyCode);

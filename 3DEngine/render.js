@@ -65,7 +65,7 @@ function tick()
 
         if(Rendering)
         {
-            animate();
+            //animate();
 
             DrawObjects();
 

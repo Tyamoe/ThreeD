@@ -40,6 +40,19 @@
   visibility: visible;
 }
 
+button.defaultButton
+{
+	//Border, TextColor/Size
+	border-style: groove;
+	border-width: 3px;
+	border-color: white;
+	font-size: 2em;
+	font-weight: bold;
+	text-align: center;
+	color: rgba(220, 220, 220, 1.0);
+	text-shadow: -3px 2px black;
+}
+
 #loading
 {
 	height:100vh;
@@ -142,12 +155,6 @@ div.loader
 	display: none;
 }
 
-
-#UIDiv
-{
-	visibility: hidden;
-}
-
 #TogglePanel
 {
 	position: absolute;
@@ -183,15 +190,100 @@ div.loader
 	background-color: rgb(32, 32, 32);
 }
 
-button.defaultButton
+.ViewerDiv
 {
-	//Border, TextColor/Size
-	border-style: groove;
-	border-width: 3px;
-	border-color: white;
-	font-size: 2em;
-	font-weight: bold;
-	text-align: center;
-	color: rgba(220, 220, 220, 1.0);
-	text-shadow: -3px 2px black;
+	position: absolute;
+	top: 3.5vh;
+	right: 20vw;
+	bottom: 3vh;
+	left: 10vw;
+}
+
+/* UI Panels */
+
+#TopPanel
+{
+	position: absolute;
+	left: 0vw;
+	top: 0vh;
+	width: 100vw;
+	height: 3.5vh;
+	background-color: rgb(22, 22, 22);
+}
+
+#BottomPanel
+{
+	position: absolute;
+	left: 0vw;
+	bottom: 0vh;
+	width: 100vw;
+	height: 3vh;
+	background-color: rgb(15, 15, 15);
+}
+
+#LeftPanel
+{
+	position: absolute;
+	left: 0vw;
+	top: 3.5vh;
+	bottom: 3vh;
+	width: 10vw;
+	height: 93.5vh;
+	background-color: rgb(82, 82, 82);
+}
+#TransformPanel
+{
+	position: absolute;
+	//right: 0%;
+	top: 0%;
+	width: 100%;
+	height: 33%;
+	background-color: rgb(82, 82, 82);
+}
+#PrimitivePanel
+{
+	position: absolute;
+	//right: 0%;
+	top: 33%;
+	width: 100%;
+	height: 34%;
+	background-color: rgb(72, 72, 72);
+}
+#PolyToolPanel
+{
+	position: absolute;
+	//right: 0%;
+	top: 67%;
+	width: 100%;
+	height: 33%;
+	background-color: rgb(92, 92, 92);
+}
+
+#RightPanel
+{
+	position: absolute;
+	right: 0vw;
+	top: 3.5vh;
+	bottom: 3vh;
+	width: 20vw;
+	height: 93.5vh;
+	background-color: rgb(122, 122, 122);
+}
+#ScenePanel
+{
+	position: absolute;
+	//right: 0%;
+	top: 0%;
+	width: 100%;
+	height: 30%;
+	background-color: rgb(122, 122, 122);
+}
+#DetailPanel
+{
+	position: absolute;
+	//right: 0%;
+	top: 30%;
+	width: 100%;
+	height: 70%;
+	background-color: rgb(172, 172, 172);
 }

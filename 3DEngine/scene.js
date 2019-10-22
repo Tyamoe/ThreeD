@@ -5,7 +5,7 @@ function makeScene()
 	vec3.set(camera.Front, -0.0996, -0.6461, -0.7567);
 	vec3.set(camera.Up, 0, 1, 0);
 
-	loadObjFromVerts("Sphere1", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
+	/*loadObjFromVerts("Sphere1", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("Sphere2", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("Sphere3", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
 	loadObjFromVerts("Sphere4", MeshSphere, new Float32Array([0.55, 0.55, 0.55, 1]), RenderMode.Phong, true);
@@ -26,5 +26,6 @@ function makeScene()
 	loadObjFromVerts("triangle.obj", "triangle.obj", new Float32Array([0.9, 0.45, 0.45, 1]), RenderMode.Phong, false);
 	loadObjFromVerts("bunny_high_poly.obj", "bunny_high_poly.obj", new Float32Array([0.9, 0.45, 0.45, 1]), RenderMode.Phong, false);
 	loadObjFromVerts("sphere_modified.obj", "sphere_modified.obj", new Float32Array([0.9, 0.45, 0.45, 1]), RenderMode.Phong, false);
-	loadObjFromVerts("lucy_princeton.obj", "lucy_princeton.obj", new Float32Array([0.9, 0.45, 0.45, 1]), RenderMode.Phong, false);
+	loadObjFromVerts("lucy_princeton.obj", "lucy_princeton.obj", new Float32Array([0.9, 0.45, 0.45, 1]), RenderMode.Phong, false);*/
+	CanvasLoaded();
 }

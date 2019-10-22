@@ -31,6 +31,7 @@ window.onload = function()
 		firefox = true;
 	}
 
+	InitEditor();
 	InitWebGL();
 }
 

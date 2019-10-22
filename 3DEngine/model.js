@@ -116,7 +116,7 @@ function loadObjFromVerts(name1, mesh, Shading, renderMode, Animate)
 		}
 		else
 		{
-			ObjList[ObjCount].draw = false;
+			//ObjList[ObjCount].draw = false;
 			updateScale(ObjList[ObjCount], 0, 0, 0);
 			//updateTransform(ObjList[ObjCount], 5, -2, 0);
 		}
@@ -260,9 +260,6 @@ function loadObj(fileStream, Name, Shading, renderMode, Animate)
 	
 	reader.onload = function(progressEvent)
 	{
-		if(Name == "lucy_princeton.obj")
-			CanvasLoaded();
-
 		var Vertices = [];
 		var NormalsVertices = [];
 		var NormalsFace = [];

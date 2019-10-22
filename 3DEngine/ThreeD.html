@@ -2,11 +2,62 @@
 <html>
 
 <link href="css/engine.css" rel="stylesheet" />
+<link href="css/editor.css" rel="stylesheet" />
 
 <body>
-<div id="ViewerDiv" class="ViewerDiv"></div>
+<div id="ViewerDiv" class="ViewerDiv">
+	<div id="ImportPanel" class="ImportPanel">
+		<div id="TopLayer">
+			<div id="ImportClose" onClick="CloseImportPanel()"></div>
+		</div>
+		<div id="LeftLayer"></div>
+		<input type="file" id="ImportFileSelector" onchange="ImportSelectFile(this.files)">
+		<button id="ImportLoadFile" onClick="LoadSelectFile()">Load</button>
+		<div class="tooltip ImportCheckbox" style="bottom: 35%; left: 36%;">
+			<input id="UsefulCheckbox1" class="Toggle" type="checkbox" onclick=""/>
+			<label for="UsefulCheckbox1"></label>
+			<span class="tooltiptext tooltiptop">Useful Checkbox #1</span>
+		</div>
+		<div class="tooltip ImportCheckbox" style="bottom: 35%; left: 57.5%;">
+			<input id="UsefulCheckbox2" class="Toggle" type="checkbox" onclick=""/>
+			<label for="UsefulCheckbox2"></label>
+			<span class="tooltiptext tooltiptop">Useful Checkbox #2</span>
+		</div>
+		<div class="tooltip ImportCheckbox" style="bottom: 35%; left: 79%;">
+			<input id="UsefulCheckbox3" class="Toggle" type="checkbox" onclick=""/>
+			<label for="UsefulCheckbox3"></label>
+			<span class="tooltiptext tooltiptop">Useful Checkbox #3</span>
+		</div>
+		<div class="tooltip ImportCheckbox" style="bottom: 5%; left: 36%;">
+			<input id="UsefulCheckbox4" class="Toggle" type="checkbox" onclick=""/>
+			<label for="UsefulCheckbox4"></label>
+			<span class="tooltiptext tooltiptop">Useful Checkbox #4</span>
+		</div>
+		<div class="tooltip ImportCheckbox" style="bottom: 5%; left: 57.5%;">
+			<input id="UsefulCheckbox5" class="Toggle" type="checkbox" onclick=""/>
+			<label for="UsefulCheckbox5"></label>
+			<span class="tooltiptext tooltiptop">Useful Checkbox #5</span>
+		</div>
+		<div class="tooltip ImportCheckbox" style="bottom: 5%; left: 79%;">
+			<input id="UsefulCheckbox6" class="Toggle" type="checkbox" onclick=""/>
+			<label for="UsefulCheckbox6"></label>
+			<span class="tooltiptext tooltiptop">Useful Checkbox #6</span>
+		</div>
+	</div>
+</div>
 <div class="UIDiv" class="UIDiv FillScreen">
 	<div id="TopPanel" class="UIElement">
+		<div class="options dropdown">
+		<button class="dropbtn">File</button>
+		  <div class="dropdown-content">
+		    <a href="#" target="_self" onClick="NewPanel()">New</a>
+		    <a href="#" target="_self" onClick="OpenPanel()">Open</a>
+		    <a href="#" target="_self" onClick="SavePanel()">Save</a>
+		    <a href="#" target="_self" onClick="ResetPanel()">Reset</a>
+		    <a href="#" target="_self" onClick="ImportPanel()">Import</a>
+		    <a href="#" target="_self" onClick="ExportPanel()">Export</a>
+		  </div>
+		</div>
 	</div>
 	<div id="LeftPanel" class="UIElement">
 		<div id="TransformPanel"></div>
@@ -29,6 +80,8 @@
 <script src="vendor/jquery-3.3.1.min.js"></script>
 <script src="threed.js"></script>
 <script src="vendor/gl-matrix.js"></script>
+<script src="editor.js"></script>
+<script src="import.js"></script>
 <script src="scene.js"></script>
 <script src="main.js"></script>
 <script src="mesh.js"></script>

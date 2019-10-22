@@ -1,0 +1,101 @@
+
+#ImportPanel
+{
+	display: visible;
+	position: absolute;
+	right: 10vw;
+	top: 10vh;
+	width: 50vw;
+	height: 60vh;
+	background-color: rgb(122, 42, 32);
+}
+
+#TopLayer
+{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 6%;
+	background-color: rgb(222, 222, 222);
+}
+
+#ImportClose
+{
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 3.75%;
+	height: 100%;
+	background-color: rgb(222, 0, 0);
+}
+
+#LeftLayer
+{
+	position: absolute;
+	left: 0;
+	top: 6%;
+	width: 30%;
+	height: 94%;
+	background-color: rgb(122, 122, 122);
+}
+
+#ImportFileSelector
+{
+	position: absolute;
+	left: 30%; 
+	top: 6%;
+	width: 70%;
+	height: 4%;
+	background-color: rgb(232, 232, 232);
+	visibility: visible;
+
+	text-align: center;
+	//border: 1% solid grey;
+}
+
+#ImportLoadFile
+{
+	position: absolute;
+	left: 30%; 
+	top: 10%;
+	width: 8%;
+	height: 5%;
+
+	margin: auto 0;
+	font-size: 18px;
+	color: rgb(232, 232, 232);
+	background-color: rgb(32, 32, 32);
+}
+
+.ImportCheckbox
+{
+	position: absolute;
+	width: 15%;
+	height: 25%;
+}
+
+#UsefulCheckbox1 + label
+{
+	background-color: yellow;
+}
+#UsefulCheckbox2 + label
+{
+	background-color: blue;
+}
+#UsefulCheckbox3 + label
+{
+	background-color: red;
+}
+#UsefulCheckbox4 + label
+{
+	background-color: green;
+}
+#UsefulCheckbox5 + label
+{
+	background-color: magenta;
+}
+#UsefulCheckbox6 + label
+{
+	background-color: orange;
+}

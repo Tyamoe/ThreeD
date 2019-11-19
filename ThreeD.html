@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 
-<link href="css/engine.css" rel="stylesheet" />
-<link href="css/editor.css" rel="stylesheet" />
+<link href="utils/css/engine.css" rel="stylesheet" />
+<link href="utils/css/editor.css" rel="stylesheet" />
 
 <body>
 <div id="ViewerDiv" class="ViewerDiv">
@@ -77,21 +77,30 @@
 </div>
 </body>
 
-<script src="vendor/jquery-3.3.1.min.js"></script>
+<script src="utils/vendor/jquery-3.3.1.min.js"></script>
+<script src="utils/vendor/gl-matrix.js"></script>
+
 <script src="threed.js"></script>
-<script src="vendor/gl-matrix.js"></script>
-<script src="editor.js"></script>
-<script src="import.js"></script>
-<script src="scene.js"></script>
-<script src="main.js"></script>
-<script src="mesh.js"></script>
-<script src="component.js"></script>
-<script src="object.js"></script>
-<script src="shader.js"></script>
-<script src="model.js"></script>
-<script src="render.js"></script>
-<script src="input.js"></script>
-<script src="picking.js"></script>
+
+<script src="ui/ui.js"></script>
+<script src="ui/import.js"></script>
+
+<script src="engine/init/app.js"></script>
+<script src="engine/init/setup.js"></script>
+<script src="engine/interface/picking.js"></script>
+<script src="engine/interface/input.js"></script>
+<script src="engine/loaders/obj_loader.js"></script>
+<script src="engine/loaders/texture_loader.js"></script>
+<script src="engine/loaders/generator.js"></script>
+<script src="engine/model/mesh.js"></script>
+<script src="engine/model/transform.js"></script>
+<script src="engine/model/model.js"></script>
+<script src="engine/rendering/shaderSource.js"></script>
+<script src="engine/rendering/shader.js"></script>
+<script src="engine/rendering/render.js"></script>
+<script src="engine/rendering/camera.js"></script>
+<script src="engine/light/light.js"></script>
+<script src="common/utilities.js"></script>
 
 </html>
 

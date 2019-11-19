@@ -1,5 +1,4 @@
 var importPanel = null;
-
 var importFiles = null;
 
 function ImportPanel()
@@ -20,6 +19,6 @@ function ImportSelectFile(files)
 
 function LoadSelectFile()
 {
-	loadObj(importFiles, "Test", new Float32Array([0.9, 0.45, 0.45, 1]), RenderMode.Phong, false);
+	loadOBJ(importFiles, importFiles.name, new Float32Array([0.9, 0.45, 0.45, 1]), null, true);
 	CloseImportPanel();
 }

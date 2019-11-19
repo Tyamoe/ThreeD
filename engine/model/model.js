@@ -1,80 +1,14 @@
-var ObjCount = 0;
-var ObjList = [];
+var ModelCount = 0;
+var ModelList = [];
 
-//var abc = [0, 45, 90, 135, 180, 225, 270, 305];
-var cba = 0.5;
-
-var abc = new Map([
-	[0, false],
-	[45, false],
-	[90, false],
-	[135, false],
-	[180, false],
-	[225, false],
-	[270, false],
-	[305, false],
-]);
-
-var Mouse = function() 
-{ 
-	this.firstMouse = true;
-	this.lastX = canvas.width / 2.0;
-	this.lastY = canvas.height / 2.0;
-
-	this.sensitivity = 0.05;
-	this.yaw = -90.0;
-	this.pitch = 0.0;
-}
-
-var Camera = function() 
-{ 
-	this.fov = 45;
-
-	this.rotation = 0.25;
-
-	this.pitch = 0.0;
-	this.yaw = 0.0;
-
-	this.Pos = vec3.create();
-	this.Front = vec3.create();
-	this.Up = vec3.create();
-	this.Right = vec3.create();
-
-	vec3.set(this.Front, 0, 0, -1);
-	vec3.set(this.Up, 0, 1, 0);
-	vec3.set(this.Right, 1, 0, 0);
-
-	this.view = mat4.create();
-}
-
-var Model = function(Name, Mesh, Color)
-{
-	this.name = Name;
-	
-	this.transform = {};
-	this.mesh = Mesh;
-
-	this.color = vec3.create();
-	this.shadingColor = [0.5, 0.5, 0.5, 1.0];
-}
-
-// Legacy Object Class
-var Obj = function(name, Mesh) 
+var Model = function(name, Mesh) 
 {
 	this.name = name;
 	this.draw = true;
-	this.animate = true;
 	this.angle = 0;
 
 	this.transform = {};
 	this.mesh = Mesh;
-
-	this.renderMode = RenderMode.Phong;
-
-	this.shader = null;
-	this.pickShader = null;
-
-	this.skybox = false;
 
 	this.shadingColor = [1.0, 1.0, 1.0, 1.0];
 	this.tint = [1.0, 1.0, 1.0, 1.0];
@@ -95,11 +29,54 @@ var Obj = function(name, Mesh)
 	this.MVPMatrix = mat4.create();
 }
 
+function CreateModel(name1, mesh, transform = null, show = true)
+{	
+	if(isString(mesh))
+	{	
+		mesh = modelPath + mesh;
+		var blob = null;
+		var xhr = new XMLHttpRequest();
+		xhr.open("GET", mesh);
+		xhr.responseType = "blob";
+		xhr.onload = function() 
+		{
+		    blob = xhr.response;
+		    blob.name = mesh;
+		    loadOBJ(blob, name1, transform, show);
+			
+			ObjectsLoaded--;
+			return;
+		}
+		xhr.send();
+		return;
+	}
+
+	ModelList.push(new Obj(name1, mesh));
+	if(transform == null)
+	{
+		ModelList[ModelCount].transform = new Transform();
+	}
+	else 
+	{
+		ModelList[ModelCount].transform = transform;
+	}
+
+	ModelList[ModelCount].draw = show;
+	
+	ModelList[ModelCount].AttrLocPosition = gl.getAttribLocation(shaderPhongLighting, 'vertPosition');
+	ModelList[ModelCount].AttrLocTexCoords = gl.getAttribLocation(shaderPhongLighting, 'vertTexCoord');
+	ModelList[ModelCount].AttrLocNormal = gl.getAttribLocation(shaderPhongLighting, 'vertNormal');
+
+	ModelCount++;
+
+	return ModelList[ModelCount - 1];
+}
+
 function getObjIDbyName(name)
 {
 	for(var i = 0; i < ObjCount; i++)
 	{
-		if(ObjList[i].name == name)
+		if(ModelList[i].name == name)
 		{
 			return i;
 		}
@@ -111,12 +88,12 @@ function getObjByName(name)
 {
 	for(var i = 0; i < ObjCount; i++)
 	{
-		if(ObjList[i].name == name)
+		if(ModelList[i].name == name)
 		{
-			return ObjList[i];
+			return ModelList[i];
 		}
  	}
- 	return ObjList[0];
+ 	return ModelList[0];
 }
 
 function updateTransform(obj, x, y, z)
